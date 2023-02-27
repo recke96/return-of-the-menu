@@ -18,6 +18,7 @@
     const dateStr = urlParams.get(paramName);
 
     let date = dateStr == null ? today : parseDate(dateStr, dateFmtMachine, today);
+    let hoversTitle = false;
 
     const updateUrl = (date: Date) => {
         const url = new URL(window.location);
@@ -40,11 +41,23 @@
         date = prev;
         updateUrl(prev);
     }
-
-    if (window.matchMedia &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
+    const home = () => {
+        date = today;
+        updateUrl(today);
     }
+
+    let themePref = window.matchMedia('(prefers-color-scheme: dark)');
+    if (themePref.matches) {
+        document.body.classList.add("dark");
+    }
+    themePref.addEventListener("change", evt => {
+        if (evt.matches) {
+            document.body.classList.add("dark");
+        }
+        else {
+            document.body.classList.remove("dark");
+        }
+    });
 </script>
 
 <svelte:head>
@@ -52,14 +65,11 @@
 </svelte:head>
 
 <Nav class="bg-primary">
-    <Row slot="left" class="is-vertical-align" on:click={() => updateUrl(today)}>
-        <Col size="3">
-            <Icon src={mdiSilverware} size="6"/>
-        </Col>
-        <Col>
-            <h1>Return of the Menu</h1>
-        </Col>
-    </Row>
+    <div slot="left" class="is-vertical-align" class:bd-light={hoversTitle} on:click={home}
+         on:mouseenter={()=> hoversTitle=true} on:mouseleave={()=> hoversTitle=false}>
+        <Icon src={mdiSilverware} alt="Return of the Menu" size="6"/>
+        <h1 class="hide-sm">Return of the Menu</h1>
+    </div>
     <Row slot="center" class="is-vertical-align">
         <Col>
             <Button icon={mdiArrowLeft} on:click={prev}/>
@@ -71,7 +81,9 @@
     </Row>
     <Row slot="right" class="is-vertical-align"></Row>
 </Nav>
-<TheMenu {date}/>
+<main class="container" style="margin-top: 2em">
+    <TheMenu {date}/>
+</main>
 
 <style>
     :global(:root) {
