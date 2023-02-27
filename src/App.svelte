@@ -19,7 +19,7 @@
 
     let date = dateStr == null ? today : parseDate(dateStr, dateFmtMachine, today);
 
-    const navigate = (date: Date) => {
+    const updateUrl = (date: Date) => {
         const url = new URL(window.location);
         url.searchParams.set(paramName, formatDate(date, dateFmtMachine));
         window.history.pushState(null, document.title, url);
@@ -29,14 +29,16 @@
         if (isWeekend(next)) {
             next = nextMonday(next);
         }
-        navigate(next);
+        date = next;
+        updateUrl(next);
     }
     const prev = () => {
         let prev = addDays(date, -1);
         if (isWeekend(prev)) {
             prev = previousFriday(prev);
         }
-        navigate(prev);
+        date = prev;
+        updateUrl(prev);
     }
 
     if (window.matchMedia &&
@@ -50,7 +52,7 @@
 </svelte:head>
 
 <Nav class="bg-primary">
-    <Row slot="left" class="is-vertical-align" on:click={() => navigate(today)}>
+    <Row slot="left" class="is-vertical-align" on:click={() => updateUrl(today)}>
         <Col size="3">
             <Icon src={mdiSilverware} size="6"/>
         </Col>
