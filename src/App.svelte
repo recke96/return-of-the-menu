@@ -22,7 +22,7 @@
     const navigate = (date: Date) => {
         const url = new URL(window.location);
         url.searchParams.set(paramName, formatDate(date, dateFmtMachine));
-        window.location.assign(url);
+        window.history.pushState(null, document.title, url);
     };
     const next = () => {
         let next = addDays(date, 1);
