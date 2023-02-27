@@ -53,8 +53,7 @@
     themePref.addEventListener("change", evt => {
         if (evt.matches) {
             document.body.classList.add("dark");
-        }
-        else {
+        } else {
             document.body.classList.remove("dark");
         }
     });
@@ -70,15 +69,21 @@
         <Icon src={mdiSilverware} alt="Return of the Menu" size="6"/>
         <h1 class="hide-sm">Return of the Menu</h1>
     </div>
-    <Row slot="center" class="is-vertical-align">
-        <Col>
-            <Button icon={mdiArrowLeft} on:click={prev}/>
-        </Col>
-        <Col><h1>{formatDate(date, dateFmtHuman)}</h1></Col>
-        <Col>
-            <Button icon={mdiArrowRight} on:click={next}/>
-        </Col>
-    </Row>
+    <div slot="center" class="grouped">
+        <Button primary on:click={prev}>
+            <Icon src={mdiArrowLeft} size="3"/>
+        </Button>
+        <Button primary style="padding: 10px 5px">
+            <h1>
+                {formatDate(date, dateFmtHuman)}
+                <br/>
+                <small>{formatDate(date, "EEEE")}</small>
+            </h1>
+        </Button>
+        <Button primary on:click={next}>
+            <Icon src={mdiArrowRight} size="3"/>
+        </Button>
+    </div>
     <Row slot="right" class="is-vertical-align"></Row>
 </Nav>
 <main class="container" style="margin-top: 2em">
