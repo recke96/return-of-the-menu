@@ -74,9 +74,9 @@
         <details bind:open={dateSelectOpen} id="date-details" class="dropdown">
             <summary class="button primary">
                 <h1>
-                    {formatDate(date, dateFmtHuman)}
+                    {formatDate(date, "EEEE")}
                     <br/>
-                    <small>{formatDate(date, "EEEE")}</small>
+                    <small style="font-size: .75em">{formatDate(date, dateFmtHuman)}</small>
                 </h1>
             </summary>
             <Card style="width: 100%">
