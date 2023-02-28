@@ -62,10 +62,10 @@
 </svelte:head>
 
 <Nav class="bg-primary">
-    <div slot="left" class="is-vertical-align" class:bd-light={hoversTitle} on:click={home}
+    <div slot="left" class="is-vertical-align hide-xs" class:bd-light={hoversTitle} on:click={home}
          on:mouseenter={()=> hoversTitle=true} on:mouseleave={()=> hoversTitle=false}>
         <Icon src={mdiSilverware} alt="Return of the Menu" size="6"/>
-        <h1 class="hide-sm hide-xs">Return of the Menu</h1>
+        <h1 class="hide-sm">Return of the Menu</h1>
     </div>
     <div slot="center" class="grouped">
         <Button primary on:click={prev}>
