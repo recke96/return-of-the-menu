@@ -20,19 +20,18 @@
     let date = dateStr == null ? today : parseDate(dateStr, dateFmtMachine, today);
     let hoversTitle = false;
     let dateSelectOpen = false;
-
-    const updateUrl = (date: Date) => {
+    $: {
         const url = new URL(window.location);
         url.searchParams.set(paramName, formatDate(date, dateFmtMachine));
         window.history.pushState(null, document.title, url);
-    };
+    }
+
     const next = () => {
         let next = addDays(date, 1);
         if (isWeekend(next)) {
             next = nextMonday(next);
         }
         date = next;
-        updateUrl(next);
     }
     const prev = () => {
         let prev = addDays(date, -1);
@@ -40,11 +39,9 @@
             prev = previousFriday(prev);
         }
         date = prev;
-        updateUrl(prev);
     }
     const home = () => {
         date = today;
-        updateUrl(today);
     }
 
     let themePref = window.matchMedia('(prefers-color-scheme: dark)');
