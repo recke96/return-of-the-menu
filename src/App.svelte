@@ -1,6 +1,6 @@
 <script lang="ts">
     import 'chota';
-    import {Nav, Row, Col, Button, Icon} from 'svelte-chota';
+    import {Nav, Row, Button, Icon, Card, Input} from 'svelte-chota';
     import TheMenu from "./lib/TheMenu.svelte";
     import {mdiArrowLeft, mdiArrowRight, mdiSilverware} from '@mdi/js';
     import addDays from 'date-fns/addDays';
@@ -19,6 +19,7 @@
 
     let date = dateStr == null ? today : parseDate(dateStr, dateFmtMachine, today);
     let hoversTitle = false;
+    let dateSelectOpen = false;
 
     const updateUrl = (date: Date) => {
         const url = new URL(window.location);
@@ -73,13 +74,26 @@
         <Button primary on:click={prev}>
             <Icon src={mdiArrowLeft} size="3"/>
         </Button>
-        <Button primary style="padding: 10px 5px">
-            <h1>
-                {formatDate(date, dateFmtHuman)}
-                <br/>
-                <small>{formatDate(date, "EEEE")}</small>
-            </h1>
-        </Button>
+        <details bind:open={dateSelectOpen} id="date-details" class="dropdown">
+            <summary class="button primary">
+                <h1>
+                    {formatDate(date, dateFmtHuman)}
+                    <br/>
+                    <small>{formatDate(date, "EEEE")}</small>
+                </h1>
+            </summary>
+            <Card style="width: 100%">
+                <Input
+                        date
+                        value={formatDate(date, dateFmtMachine)}
+                        on:change={evt => {
+                            date = evt.target.valueAsDate;
+                            dateSelectOpen = false;
+                        }}
+                        style="width: calc(100% - 20px)"
+                />
+            </Card>
+        </details>
         <Button primary on:click={next}>
             <Icon src={mdiArrowRight} size="3"/>
         </Button>
