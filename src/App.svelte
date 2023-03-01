@@ -1,116 +1,126 @@
 <script lang="ts">
-    import 'chota';
-    import {Nav, Row, Button, Icon, Card, Input} from 'svelte-chota';
-    import TheMenu from "./lib/TheMenu.svelte";
-    import {mdiArrowLeft, mdiArrowRight, mdiSilverware} from '@mdi/js';
-    import addDays from 'date-fns/addDays';
-    import formatDate from 'date-fns/format';
-    import parseDate from 'date-fns/parse';
-    import isWeekend from 'date-fns/isWeekend';
-    import nextMonday from 'date-fns/nextMonday';
-    import previousFriday from 'date-fns/previousFriday';
+  import "chota";
+  import { Nav, Col, Row, Button, Icon, Card, Input } from "svelte-chota";
+  import TheMenu from "./lib/TheMenu.svelte";
+  import { mdiArrowLeft, mdiArrowRight, mdiSilverware } from "@mdi/js";
+  import addDays from "date-fns/addDays";
+  import formatDate from "date-fns/format";
+  import parseDate from "date-fns/parse";
+  import isWeekend from "date-fns/isWeekend";
+  import nextMonday from "date-fns/nextMonday";
+  import previousFriday from "date-fns/previousFriday";
+  import ThemePicker from "./lib/ThemePicker.svelte";
 
-    const today = new Date();
-    const dateFmtMachine = "yyyy-MM-dd";
-    const dateFmtHuman = "dd.MM.yyyy";
-    const paramName = "date";
-    const urlParams = new URLSearchParams(window.location.search);
-    const dateStr = urlParams.get(paramName);
+  const today = new Date();
+  const dateFmtMachine = "yyyy-MM-dd";
+  const dateFmtHuman = "dd.MM.yyyy";
+  const paramName = "date";
+  const urlParams = new URLSearchParams(window.location.search);
+  const dateStr = urlParams.get(paramName);
 
-    let date = dateStr == null ? today : parseDate(dateStr, dateFmtMachine, today);
-    let hoversTitle = false;
-    let dateSelectOpen = false;
-    $: {
-        const url = new URL(window.location);
-        url.searchParams.set(paramName, formatDate(date, dateFmtMachine));
-        window.history.pushState(null, document.title, url);
-    }
+  let date =
+    dateStr == null ? today : parseDate(dateStr, dateFmtMachine, today);
+  let hoversTitle = false;
+  let dateSelectOpen = false;
+  $: {
+    const url = new URL(window.location);
+    url.searchParams.set(paramName, formatDate(date, dateFmtMachine));
+    window.history.pushState(null, document.title, url);
+  }
 
-    const next = () => {
-        let next = addDays(date, 1);
-        if (isWeekend(next)) {
-            next = nextMonday(next);
-        }
-        date = next;
+  const next = () => {
+    let next = addDays(date, 1);
+    if (isWeekend(next)) {
+      next = nextMonday(next);
     }
-    const prev = () => {
-        let prev = addDays(date, -1);
-        if (isWeekend(prev)) {
-            prev = previousFriday(prev);
-        }
-        date = prev;
+    date = next;
+  };
+  const prev = () => {
+    let prev = addDays(date, -1);
+    if (isWeekend(prev)) {
+      prev = previousFriday(prev);
     }
-    const home = () => {
-        date = today;
-    }
-
-    let themePref = window.matchMedia('(prefers-color-scheme: dark)');
-    if (themePref.matches) {
-        document.body.classList.add("dark");
-    }
-    themePref.addEventListener("change", evt => {
-        if (evt.matches) {
-            document.body.classList.add("dark");
-        } else {
-            document.body.classList.remove("dark");
-        }
-    });
+    date = prev;
+  };
+  const home = () => {
+    date = today;
+  };
 </script>
 
 <svelte:head>
-    <title>{formatDate(date, dateFmtHuman)} | Menu</title>
+  <title>{formatDate(date, dateFmtHuman)} | Menu</title>
 </svelte:head>
 
-<Nav class="bg-primary">
-    <div slot="left" class="is-vertical-align hide-xs" class:bd-light={hoversTitle} on:click={home}
-         on:mouseenter={()=> hoversTitle=true} on:mouseleave={()=> hoversTitle=false}>
-        <Icon src={mdiSilverware} alt="Return of the Menu" size="6"/>
-        <h1 class="hide-sm">Return of the Menu</h1>
+<div class="wrapper">
+  <Nav class="bg-primary">
+    <div
+      slot="left"
+      class="is-vertical-align hide-xs"
+      class:bd-light={hoversTitle}
+      on:click={home}
+      on:mouseenter={() => (hoversTitle = true)}
+      on:mouseleave={() => (hoversTitle = false)}
+    >
+      <Icon src={mdiSilverware} alt="Return of the Menu" size="6" />
+      <h1 class="hide-sm">Return of the Menu</h1>
     </div>
     <div slot="center" class="grouped">
-        <Button primary on:click={prev}>
-            <Icon src={mdiArrowLeft} size="3"/>
-        </Button>
-        <details bind:open={dateSelectOpen} id="date-details" class="dropdown">
-            <summary class="button primary">
-                <h1>
-                    {formatDate(date, "EEEE")}
-                    <br/>
-                    <small style="font-size: .75em">{formatDate(date, dateFmtHuman)}</small>
-                </h1>
-            </summary>
-            <Card style="width: 100%">
-                <Input
-                        date
-                        value={formatDate(date, dateFmtMachine)}
-                        on:change={evt => {
-                            date = evt.target.valueAsDate;
-                            dateSelectOpen = false;
-                        }}
-                        style="width: calc(100% - 20px)"
-                />
-            </Card>
-        </details>
-        <Button primary on:click={next}>
-            <Icon src={mdiArrowRight} size="3"/>
-        </Button>
+      <Button primary on:click={prev}>
+        <Icon src={mdiArrowLeft} size="3" />
+      </Button>
+      <details bind:open={dateSelectOpen} id="date-details" class="dropdown">
+        <summary class="button primary">
+          <h1>
+            {formatDate(date, "EEEE")}
+            <br />
+            <small style="font-size: .75em"
+              >{formatDate(date, dateFmtHuman)}</small
+            >
+          </h1>
+        </summary>
+        <Card style="width: 100%">
+          <Input
+            date
+            value={formatDate(date, dateFmtMachine)}
+            on:change={(evt) => {
+              date = evt.target.valueAsDate;
+              dateSelectOpen = false;
+            }}
+            style="width: calc(100% - 20px)"
+          />
+        </Card>
+      </details>
+      <Button primary on:click={next}>
+        <Icon src={mdiArrowRight} size="3" />
+      </Button>
     </div>
-    <Row slot="right" class="is-vertical-align"></Row>
-</Nav>
-<main class="container" style="margin-top: 2em">
-    <TheMenu {date}/>
-</main>
+    <Row slot="right" class="is-vertical-align" />
+  </Nav>
+  <main class="container">
+    <TheMenu {date} />
+  </main>
+  <footer class="container">
+    <Row>
+      <Col>
+        <ThemePicker />
+      </Col>
+    </Row>
+  </footer>
+</div>
 
 <style>
-    :global(:root) {
-        --grid-maxWidth: 160rem;
-    }
+  .wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  main {
+    margin-top: 2em;
+    flex-grow: 1;
+  }
 
-    :global(body.dark) {
-        --bg-color: #000;
-        --bg-secondary-color: #131316;
-        --font-color: #f5f5f5;
-        --color-grey: #ccc;
-        --color-darkGrey: #777;
-    }
+  :global(:root) {
+    --grid-maxWidth: 160rem;
+  }
 </style>
