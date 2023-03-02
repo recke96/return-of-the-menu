@@ -119,7 +119,7 @@
   });
 </script>
 
-<div>
+<div class="grouped is-vertical-align">
   <label for="theme-picker">Theme</label>
   <select id="theme-picker" bind:value={currentTheme} on:change={switchTheme}>
     {#each Object.keys(themes) as themeKey (themeKey)}
