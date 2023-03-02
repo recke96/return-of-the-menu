@@ -23,12 +23,12 @@
             <tbody>
             {#each menus as menu (menu.id)}
                 <tr>
-                    <th>{menu.title}</th>
-                    <th>{@html sanitize(menu.content)}</th>
-                    <th>{new Intl.NumberFormat('de-AT', {
+                    <td>{menu.title}</td>
+                    <td>{@html sanitize(menu.content)}</td>
+                    <td>{new Intl.NumberFormat('de-AT', {
                         style: "currency",
                         currency: menu.currency
-                    }).format(menu.price / 100)}</th>
+                    }).format(menu.price / 100)}</td>
                 </tr>
             {/each}
             </tbody>
