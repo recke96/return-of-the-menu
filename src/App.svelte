@@ -100,6 +100,7 @@
     <TheMenu {date} />
   </main>
   <footer class="container">
+    <hr />
     <Row>
       <Col>
         <ThemePicker />
@@ -118,6 +119,10 @@
   main {
     margin-top: 2em;
     flex-grow: 1;
+  }
+
+  footer > hr {
+    margin-bottom: 1em;
   }
 
   :global(:root) {
