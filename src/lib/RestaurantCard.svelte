@@ -1,17 +1,16 @@
 <script lang="ts">
     import {Card, Icon} from 'svelte-chota';
     import {mdiBlockHelper} from "@mdi/js";
-    import type {Restaurant} from './menu/menu.ts';
+    import type {Menu} from './menu/menu.ts';
     import sanitize from "sanitize-html";
 
-    export let restaurant: Restaurant;
-    let menus = restaurant.weekdayMenus[0]?.menuItems ?? [];
+    export let menu: Menu;
 </script>
 
 <Card style="height: 100%">
-    <h2 slot="header">{restaurant.name}</h2>
+    <h2 slot="header">{menu.restaurant}</h2>
 
-    {#if (menus.length > 0)}
+    {#if (menu.items.length > 0)}
         <table class="striped">
             <thead>
             <tr>
@@ -21,14 +20,14 @@
             </tr>
             </thead>
             <tbody>
-            {#each menus as menu (menu.id)}
+            {#each menu.items as item (item.id)}
                 <tr>
-                    <td>{menu.title}</td>
-                    <td>{@html sanitize(menu.content)}</td>
+                    <td>{item.title}</td>
+                    <td>{@html sanitize(item.description)}</td>
                     <td>{new Intl.NumberFormat('de-AT', {
                         style: "currency",
-                        currency: menu.currency
-                    }).format(menu.price / 100)}</td>
+                        currency: item.currency
+                    }).format(item.price)}</td>
                 </tr>
             {/each}
             </tbody>

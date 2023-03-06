@@ -1,23 +1,23 @@
 <script lang="ts">
     import {Icon, Row, Col} from 'svelte-chota';
     import {mdiSync, mdiAlertCircle} from '@mdi/js';
-    import {fetchMenuData} from './menu/menu';
+    import {menuService} from './menu/menu';
     import RestaurantCard from "./RestaurantCard.svelte";
 
     export let date: Date;
 
-    $: data = fetchMenuData(date);
+    $: data = menuService.getMenus(date);
 </script>
 
 {#await data}
     <div class="is-center">
         <Icon src={mdiSync} size="6" spin="1"/>
     </div>
-{:then restaurants}
+{:then menus}
     <Row>
-        {#each restaurants as restaurant (restaurant.id)}
+        {#each menus as menu (menu.restaurant)}
             <Col size="12" sizeMD="12" sizeLG="6">
-                <RestaurantCard {restaurant}/>
+                <RestaurantCard {menu}/>
             </Col>
         {/each}
     </Row>

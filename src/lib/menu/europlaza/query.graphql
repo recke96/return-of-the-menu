@@ -2,11 +2,6 @@ query ($limit: Int!, $offset: Int!, $from: String!, $to: String!) {
     restaurants: getAllRestaurants(limit: $limit, offset: $offset) {
         id
         name
-        description
-        address
-        phone
-        email
-        website
         weekdayMenus(startDate: $from, endDate: $to) {
             id
             date
@@ -14,13 +9,8 @@ query ($limit: Int!, $offset: Int!, $from: String!, $to: String!) {
                 id
                 title
                 content
-                allergens
                 price
                 currency
-                menuItemCategories {
-                    id
-                    name
-                }
             }
         }
     }
