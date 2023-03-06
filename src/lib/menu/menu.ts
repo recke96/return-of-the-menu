@@ -1,4 +1,5 @@
 import {europlazaService} from "./europlaza/europlazaMenu";
+import {krapfService} from "./krapf/krapfMenu";
 
 export type HtmlString = string;
 
@@ -39,5 +40,6 @@ class CompoundMenuService implements MenuService {
 }
 
 export const menuService: MenuService = new CompoundMenuService([
-    europlazaService
+    europlazaService,
+    krapfService,
 ]);
