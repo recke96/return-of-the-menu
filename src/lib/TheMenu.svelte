@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Icon, Row, Col} from 'svelte-chota';
     import {mdiSync, mdiAlertCircle} from '@mdi/js';
-    import {fetchMenuData} from './menu';
+    import {fetchMenuData} from './menu/menu';
     import RestaurantCard from "./RestaurantCard.svelte";
 
     export let date: Date;

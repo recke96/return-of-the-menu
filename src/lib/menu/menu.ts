@@ -1,7 +1,7 @@
 import formatDate from 'date-fns/formatISO';
 import startOfDay from "date-fns/startOfDay";
 import endOfDay from "date-fns/endOfDay";
-import {setCacheItem, getCacheItem} from "./cache";
+import {setCacheItem, getCacheItem} from "../cache";
 import query from './query.graphql?raw';
 
 function corsProxy(url: string): string {

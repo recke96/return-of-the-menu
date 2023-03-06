@@ -1,7 +1,7 @@
 <script lang="ts">
     import {Card, Icon} from 'svelte-chota';
     import {mdiBlockHelper} from "@mdi/js";
-    import type {Restaurant} from './menu.ts';
+    import type {Restaurant} from './menu/menu.ts';
     import sanitize from "sanitize-html";
 
     export let restaurant: Restaurant;
