@@ -21,16 +21,14 @@ class KrapfMenuService implements MenuService {
         }
         const today = new Date();
         if (!isSameWeek(date, today, {weekStartsOn: 1 /* monday */})) {
-            return [];
+            return [{
+                restaurant: "Krapf",
+                items: [alacarteItem]
+            }];
         }
 
-        const url = corsProxy("https://gastauskrapf.at");
-        const resp = await fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "text/html"
-            }
-        });
+        const url = corsProxy("https://gasthauskrapf.at/");
+        const resp = await fetch(url);
         if (resp.status !== 200) {
             throw new Error(
                 `Request for menu data resulted in a HTTP ${resp.status} code`
