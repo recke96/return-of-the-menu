@@ -53,7 +53,7 @@ class KrapfMenuService implements MenuService {
         );
         const container = firstSplitter.parentElement.parentElement;
 
-        const parsedItems: (MenuItem & { date: Date | null, weeklySpecial: boolean })[] = [];
+        const parsedItems: MenuItem[] = [];
         let currentDate: Date | null = null;
         let dateMenuCount = 0;
         let weeklySpecial = false;
@@ -96,8 +96,6 @@ class KrapfMenuService implements MenuService {
                 dateMenuCount++;
 
                 parsedItems.push({
-                    date: currentDate,
-                    weeklySpecial,
                     id: weeklySpecial ? `weekly.${dateMenuCount}` : `daily.${dateMenuCount}`,
                     title: weeklySpecial ? "Wochenangebot" : `Tagesmenü ${dateMenuCount}`,
                     description,
