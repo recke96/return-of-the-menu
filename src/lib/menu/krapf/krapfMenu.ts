@@ -108,7 +108,7 @@ class KrapfMenuService implements MenuService {
         }
 
         const dateMenu = this.defaultMenu();
-        dateMenu.items.push(...parsedItems.map(i => i as MenuItem))
+        dateMenu.items.push(...parsedItems);
 
         setCacheItem<Menu>(cacheKey, {data: dateMenu, expiresAt: Date.now() + 120 * 60 * 1000});
 
