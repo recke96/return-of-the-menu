@@ -1,4 +1,5 @@
 import {europlazaService} from "./europlaza/europlazaMenu";
+import {krapfService} from "./krapf/krapfMenu";
 
 export type HtmlString = string;
 
@@ -34,10 +35,16 @@ class CompoundMenuService implements MenuService {
     }
 
     async getMenus(date: Date): Promise<Menu[]> {
-        return (await Promise.all(this.services.map(svc => svc.getMenus(date)))).flat();
+        const fetches = this.services.map(svc => svc.getMenus(date).catch(e => {
+            console.error(e);
+            return [];
+        }));
+        const menus = await Promise.all(fetches);
+        return menus.flat();
     }
 }
 
 export const menuService: MenuService = new CompoundMenuService([
-    europlazaService
+    europlazaService,
+    krapfService,
 ]);
