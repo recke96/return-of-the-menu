@@ -22,9 +22,11 @@
 
 <Card style="height: 100%">
     <h2 slot="header">
-        <Button on:click={() => favorites.update(toggleFavorite)}>
-            <Icon src={isFavorite ? mdiHeart : mdiHeartOutline}/>
-        </Button>
+        <Button primary
+                class="is-rounded"
+                icon={isFavorite ? mdiHeart : mdiHeartOutline}
+                on:click={() => favorites.update(toggleFavorite)}
+        />
         {menu.restaurant}
     </h2>
 
