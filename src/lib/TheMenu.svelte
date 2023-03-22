@@ -8,14 +8,9 @@
 
     export let date: Date;
 
-    $: favoriteRestaurants = $favorites
-
-    console.log(favoriteRestaurants)
-
     $: menuCompare = (a: Menu, b: Menu): number =>
-        favoriteRestaurants.indexOf(b.restaurant) - favoriteRestaurants.indexOf(a.restaurant);
+        $favorites.indexOf(b.restaurant) - $favorites.indexOf(a.restaurant);
     $: data = menuService.getMenus(date)
-        .then(menus => menus.sort(menuCompare));
 </script>
 
 {#await data}
@@ -24,7 +19,7 @@
     </div>
 {:then menus}
     <Row>
-        {#each menus as menu (menu.restaurant)}
+        {#each menus.sort(menuCompare) as menu (menu.restaurant)}
             <Col size="12" sizeMD="12" sizeLG="6">
                 <RestaurantCard {menu}/>
             </Col>
