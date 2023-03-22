@@ -2,11 +2,20 @@
     import {Icon, Row, Col} from 'svelte-chota';
     import {mdiSync, mdiAlertCircle} from '@mdi/js';
     import {menuService} from './menu/menu';
+    import type {Menu} from "./menu/menu";
     import RestaurantCard from "./RestaurantCard.svelte";
+    import {favorites} from "./favorites";
 
     export let date: Date;
 
-    $: data = menuService.getMenus(date);
+    $: favoriteRestaurants = $favorites
+
+    console.log(favoriteRestaurants)
+
+    $: menuCompare = (a: Menu, b: Menu): number =>
+        favoriteRestaurants.indexOf(b.restaurant) - favoriteRestaurants.indexOf(a.restaurant);
+    $: data = menuService.getMenus(date)
+        .then(menus => menus.sort(menuCompare));
 </script>
 
 {#await data}
