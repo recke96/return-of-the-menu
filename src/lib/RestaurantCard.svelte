@@ -1,14 +1,34 @@
 <script lang="ts">
-    import {Card, Icon} from 'svelte-chota';
-    import {mdiBlockHelper} from "@mdi/js";
+    import {Card, Icon, Button} from 'svelte-chota';
+    import {mdiBlockHelper, mdiHeart, mdiHeartOutline} from "@mdi/js";
     import type {Menu} from './menu/menu.ts';
     import sanitize from "sanitize-html";
+    import {favorites} from "./favorites";
 
     export let menu: Menu;
+
+    $: isFavorite = $favorites.includes(menu.restaurant);
+    const toggleFavorite = (favs: string[]): string[] => {
+        console.log("Toggle '%s' in %o", menu.restaurant, favs);
+        const idx = favs.indexOf(menu.restaurant);
+        if (idx < 0) {
+            return [menu.restaurant, ...favs];
+        }
+
+        favs.splice(idx, 1);
+        return favs;
+    }
 </script>
 
 <Card style="height: 100%">
-    <h2 slot="header">{menu.restaurant}</h2>
+    <h2 slot="header">
+        <Button primary
+                class="is-rounded"
+                icon={isFavorite ? mdiHeart : mdiHeartOutline}
+                on:click={() => favorites.update(toggleFavorite)}
+        />
+        {menu.restaurant}
+    </h2>
 
     {#if (menu.items.length > 0)}
         <table class="striped">
