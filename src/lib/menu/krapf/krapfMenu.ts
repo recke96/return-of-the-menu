@@ -19,7 +19,7 @@ class KrapfMenuService implements MenuService {
 
     private defaultMenu(): Menu {
         return {
-            restaurant: "Krapf",
+            restaurant: "Gasthaus Krapf",
             items: [this.alacarteItem]
         };
     }
