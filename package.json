@@ -12,7 +12,7 @@
   "dependencies": {
     "@mdi/js": "7.2.96",
     "date-fns": "2.30.0",
-    "sanitize-html": "2.10.0"
+    "sanitize-html": "2.11.0"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "2.4.1",
