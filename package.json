@@ -9,6 +9,9 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "@mdi/js": "7.2.96",
     "date-fns": "2.30.0",
