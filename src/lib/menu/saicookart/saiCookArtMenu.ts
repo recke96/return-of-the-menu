@@ -1,6 +1,6 @@
 import formatDate from "date-fns/formatISO";
 import { isSameDay } from "date-fns";
-import type { Menu, MenuItem, MenuService } from "../menu";
+import type { HtmlString, Menu, MenuItem, MenuService } from "../menu";
 import { getCacheItem, setCacheItem } from "../../cache";
 import corsProxy from "../../corsProxy";
 
@@ -49,7 +49,7 @@ class SaiCookArtMenuService implements MenuService {
             ({
               id: `${food.id}.${idx}`,
               title: `${food.name.trim()} + ${opt.name.trim()}`,
-              description: food.description,
+              description: this.description(food, opt),
               price: Number.parseFloat(opt.pricePickup),
               currency: "EUR",
             } as MenuItem)
@@ -65,6 +65,18 @@ class SaiCookArtMenuService implements MenuService {
 
     return [menu];
   }
+
+  private description(food: SaiFood, option: SaiFoodOption): HtmlString {
+    let desc = food.description.trim();
+
+    if (option.allergy) {
+      desc += ` (${option.allergy})`;
+    } else if (food.allergy) {
+      desc += ` (${food.allergy})`;
+    }
+
+    return desc;
+  }
 }
 
 export const saiCookArtService = new SaiCookArtMenuService();
@@ -73,6 +85,7 @@ type SaiFood = {
   id: number;
   name: string;
   description: string;
+  allergy: string;
   spicy: boolean;
   vegan: boolean;
   vegetable: boolean;
