@@ -1,7 +1,7 @@
 import formatDate from "date-fns/formatISO";
 import { isSameDay } from "date-fns";
 import type { Menu, MenuItem, MenuService } from "../menu";
-import { getCacheItem } from "../../cache";
+import { getCacheItem, setCacheItem } from "../../cache";
 import corsProxy from "../../corsProxy";
 
 class SaiCookArtMenuService implements MenuService {
@@ -14,10 +14,10 @@ class SaiCookArtMenuService implements MenuService {
         currency: "EUR"
     }
 
-    private defaultMenu():Menu {
+    private menu(items: MenuItem[] = []):Menu {
         return {
             restaurant: "Sai CookArt",
-            items: [this.alacarteItem]
+            items: [this.alacarteItem, ...items]
         };
     }
 
@@ -29,7 +29,7 @@ class SaiCookArtMenuService implements MenuService {
         }
         const today = new Date();
         if (!isSameDay(date, today)) {
-            return [this.defaultMenu()];
+            return [this.menu()];
         }
 
         const url = corsProxy("https://api.sai-cookart.at/foods?active=true");
@@ -41,19 +41,27 @@ class SaiCookArtMenuService implements MenuService {
         }
 
         const data = await resp.json() as SaiFood[];
-        const menu = this.defaultMenu();
-
-        data.filter(food => food.category.id === 2 /* Lunchmenu */)
+        const items = data.filter(food => food.category.id === 2 /* Lunchmenu */)
             .flatMap(food => food.options.map((opt, idx) => ({
                 id: `${food.id}.${idx}`,
                 title: `${food.name.trim()} + ${opt.name.trim()}`,
                 description: food.description,
                 price: Number.parseFloat(opt.pricePickup),
                 currency: "EUR"
-            } as MenuItem)))
-    }
+            } as MenuItem)));
+        
+        const menu = this.menu(items);
 
+        setCacheItem(cacheKey, {
+            data: menu,
+            expiresAt: Date.now() + 120 * 60 * 1000
+        });
+        
+        return [menu];
+    }
 }
+
+export const saiCookArtService = new SaiCookArtMenuService();
 
 type SaiFood = {
     id: number;
