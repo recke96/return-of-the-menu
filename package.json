@@ -2,14 +2,16 @@
   "name": "return-of-the-menu",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
+    "start": "npx @11ty/eleventy --serve --incremental",
+    "build": "npx @11ty/eleventy"
   },
   "engines": {
     "node": ">=16"
   },
-  "dependencies": {
-  },
   "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "chota": "^0.9.2"
   }
 }
