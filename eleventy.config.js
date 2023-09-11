@@ -15,7 +15,7 @@ module.exports = function (eleventyConfig) {
         return currencyStyle.format(typeof value === "number" ? value : value?.amount)
     });
 
-    eleventyConfig.addFilter("sanitize", function(value){
+    eleventyConfig.addFilter("sanitize", function (value) {
         return sanitize(value);
     });
 
@@ -23,6 +23,7 @@ module.exports = function (eleventyConfig) {
         dir: {
             input: "src",
             output: "dist",
-        }
+        },
+        templateFormats: ['njk', 'md', '11ty.js'],
     };
 };

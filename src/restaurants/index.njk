@@ -6,21 +6,24 @@ pagination:
   resolve: values
   alias: restaurant
 permalink: "restaurants/{{ restaurant.name | slugify }}/"
+title: "{{ restaurant.name }} | Menü"
 ---
 
 <div class="restaurant card">
     <header>
         <h2>
             {{ restaurant.name }}
+            <br />
             <small>
                 {{ restaurant.homepage | urlize | safe }}
             </small>
         </h2>
     </header>
 
-    <table class="striped">
+    <table class="striped" style="empty-cells: hide;">
         <thead>
             <tr>
+                <th><!-- indent --></th>
                 <th>Menü</th>
                 <th>Beschreibung</th>
                 <th>Preis</th>
@@ -30,7 +33,7 @@ permalink: "restaurants/{{ restaurant.name | slugify }}/"
             {% for item in restaurant.menu %}
             {% set hasOptions = item.options.length > 0 %}
             <tr>
-                <td>{{ item.name }}</td>
+                <td colspan="2">{{ item.name }}</td>
                 {% if hasOptions %}
                 <td colspan="2">
                     {{ item.description | sanitize | safe }}
@@ -43,6 +46,7 @@ permalink: "restaurants/{{ restaurant.name | slugify }}/"
             {% if hasOptions %}
             {% for option in item.options %}
             <tr>
+                <td></td>
                 <td colspan="2">{{ [option.name, option.description] | join | sanitize | safe }}</td>
                 <td>{{ option.price | money }}</td>
             </tr>
