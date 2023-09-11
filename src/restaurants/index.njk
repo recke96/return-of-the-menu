@@ -1,0 +1,54 @@
+---
+layout: layout
+pagination:
+  data: restaurants
+  size: 1
+  resolve: values
+  alias: restaurant
+permalink: "restaurants/{{ restaurant.name | slugify }}/"
+---
+
+<div class="restaurant card">
+    <header>
+        <h2>
+            {{ restaurant.name }}
+            <small>
+                {{ restaurant.homepage | urlize | safe }}
+            </small>
+        </h2>
+    </header>
+
+    <table class="striped">
+        <thead>
+            <tr>
+                <th>Menü</th>
+                <th>Beschreibung</th>
+                <th>Preis</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in restaurant.menu %}
+            {% set hasOptions = item.options.length > 0 %}
+            <tr>
+                <td>{{ item.name }}</td>
+                {% if hasOptions %}
+                <td colspan="2">
+                    {{ item.description | sanitize | safe }}
+                </td>
+                {% else %}
+                <td> {{ item.description | sanitize | safe }} </td>
+                <td> {{ item.price | money }} </td>
+                {% endif %}
+            </tr>
+            {% if hasOptions %}
+            {% for option in item.options %}
+            <tr>
+                <td colspan="2">{{ [option.name, option.description] | join | sanitize | safe }}</td>
+                <td>{{ option.price | money }}</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
