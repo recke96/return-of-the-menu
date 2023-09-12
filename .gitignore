@@ -25,3 +25,6 @@ dist-ssr
 
 # Eleventy-Fetch cache
 .cache
+
+# Debug environment vars
+.env
