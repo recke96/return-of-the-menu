@@ -1,0 +1,24 @@
+---
+title: Rückkehr des Menüs
+description: Europlaza Menüs ohne App!
+layout: base
+---
+
+{% from "menu.njk" import table %}
+
+<div class="row">
+    {% for _, restaurant in restaurants %}
+    <div class="col-12 col-6-lg">
+        <div class="card">
+            <header>
+                <a href="/restaurants/{{ restaurant.name | slugify }}/">
+                    <h2>{{ restaurant.name }}</h2>
+                </a>
+            </header>
+
+            {{ table(restaurant.menu) }}
+
+        </div>
+    </div>
+    {% endfor %}
+</div>

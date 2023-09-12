@@ -6,6 +6,7 @@ pagination:
   resolve: values
   alias: restaurant
 permalink: "restaurants/{{ restaurant.name | slugify }}/"
+tags: restaurant
 eleventyComputed:
   title: "{{ restaurant.name }} | Menü"
 ---

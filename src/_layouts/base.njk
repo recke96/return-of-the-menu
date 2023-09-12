@@ -19,7 +19,9 @@
     <div class="wrapper">
         <header class="bg-primary">
             <div class="nav-center">
-                <h1 class="text-light">{{ title }}</h1>
+                <a href="/">
+                    <h1 class="text-light">Rückkehr des Menüs</h1>
+                </a>
             </div>
         </header>
 
@@ -27,7 +29,7 @@
             {{ content | safe }}
         </main>
 
-        <footer class="full-width row">
+        <footer class="row">
             <div class="col" style="padding: 10px;">
                 {% include "themeswitcher.njk" %}
             </div>
