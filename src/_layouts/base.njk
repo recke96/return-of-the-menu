@@ -1,25 +1,36 @@
 <!doctype html>
 <html lang="de">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta property="og:locale" content="de_AT">
-        <meta property="og:title" content="{{ title }}">
-        <meta property="og:description" content="{{ description }}">
 
-        <link rel="stylesheet" href="/assets/styles/chota.min.css">
-        <link rel="stylesheet" href="/assets/styles/menu.min.css">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:locale" content="de_AT">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ description }}">
 
-        <title>{{ title }}</title>
-    </head>
+    <link rel="stylesheet" href="/assets/bundle.min.css">
+
+    <title>{{ title }}</title>
+</head>
+
 </html>
+
 <body>
     <div class="wrapper">
-        <nav class="nav bg-primary">
+        <header class="bg-primary">
             <div class="nav-center">
                 <h1 class="text-light">{{ title }}</h1>
             </div>
-        </nav>
-        {{ content | safe }}
+        </header>
+
+        <main class="container">
+            {{ content | safe }}
+        </main>
+
+        <footer class="full-width row">
+            <div class="col" style="padding: 10px;">
+                {% include "themeswitcher.njk" %}
+            </div>
+        </footer>
     </div>
 </body>

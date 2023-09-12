@@ -1,6 +1,5 @@
 "use strict";
 
-const path = require("path");
 const CleanCSS = require("clean-css");
 const options = {
     level: 2,
@@ -8,20 +7,22 @@ const options = {
 };
 const css = new CleanCSS(options);
 
+const chota = require.resolve("chota");
+const menu = require.resolve("./menu.css");
+
 module.exports = class {
 
-    async data(){
+    async data() {
         return {
-            permalink: "/assets/styles/menu.min.css",
+            permalink: "/assets/bundle.min.css",
             eleventyExcludeFromCollections: true,
-            entryPoint: path.resolve(__dirname, "menu.css"),
+            stylesheets: [chota, menu],
         }
     }
 
-    async render({entryPoint}) {
-        const output = await css.minify([entryPoint]);
+    async render({ stylesheets }) {
+        const output = await css.minify(stylesheets);
 
         return output.styles;
     }
-
 };
