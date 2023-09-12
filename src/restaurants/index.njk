@@ -1,13 +1,15 @@
 ---
-layout: layout
+layout: base
 pagination:
   data: restaurants
   size: 1
   resolve: values
   alias: restaurant
 permalink: "restaurants/{{ restaurant.name | slugify }}/"
-title: "{{ restaurant.name }} | Menü"
+eleventyComputed:
+  title: "{{ restaurant.name }} | Menü"
 ---
+{% from "menu.njk" import table %}
 
 <div class="restaurant card">
     <header>
@@ -20,39 +22,5 @@ title: "{{ restaurant.name }} | Menü"
         </h2>
     </header>
 
-    <table class="striped" style="empty-cells: hide;">
-        <thead>
-            <tr>
-                <th><!-- indent --></th>
-                <th>Menü</th>
-                <th>Beschreibung</th>
-                <th>Preis</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in restaurant.menu %}
-            {% set hasOptions = item.options.length > 0 %}
-            <tr>
-                <td colspan="2">{{ item.name }}</td>
-                {% if hasOptions %}
-                <td colspan="2">
-                    {{ item.description | sanitize | safe }}
-                </td>
-                {% else %}
-                <td> {{ item.description | sanitize | safe }} </td>
-                <td> {{ item.price | money }} </td>
-                {% endif %}
-            </tr>
-            {% if hasOptions %}
-            {% for option in item.options %}
-            <tr>
-                <td></td>
-                <td colspan="2">{{ [option.name, option.description] | join | sanitize | safe }}</td>
-                <td>{{ option.price | money }}</td>
-            </tr>
-            {% endfor %}
-            {% endif %}
-            {% endfor %}
-        </tbody>
-    </table>
+    {{ table(restaurant.menu) }}
 </div>

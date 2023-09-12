@@ -23,6 +23,7 @@ module.exports = function (eleventyConfig) {
         dir: {
             input: "src",
             output: "dist",
+            layouts: "_layouts",
         },
         templateFormats: ['njk', 'md', '11ty.js'],
     };
