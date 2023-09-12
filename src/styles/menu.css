@@ -1,3 +1,7 @@
+:root {
+    --grid-maxWidth: 160rem;
+}
+
 .wrapper {
     min-height: 100vh;
     display: flex;
@@ -20,8 +24,6 @@ body.dark {
     --color-grey: #ccc;
     --color-darkGrey: #777;
 }
-
-
 
 body.darcula {
     --bg-color: #282a36;
