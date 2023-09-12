@@ -11,16 +11,12 @@ eleventyComputed:
 ---
 {% from "menu.njk" import table %}
 
-<div class="restaurant card">
-    <header>
-        <h2>
-            {{ restaurant.name }}
-            <br />
-            <small>
-                {{ restaurant.homepage | urlize | safe }}
-            </small>
-        </h2>
-    </header>
+<h2>
+    {{ restaurant.name }}
+    <br />
+    <small>
+        {{ restaurant.homepage | urlize | safe }}
+    </small>
+</h2>
 
-    {{ table(restaurant.menu) }}
-</div>
+{{ table(restaurant.menu) }}
