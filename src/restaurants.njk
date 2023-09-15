@@ -10,13 +10,14 @@
       return Object.values(fullData.restaurants).flat();
     },
   },
-  permalink: "restaurants/{{ restaurant.name | slugify }}/",
+  permalink: "restaurants/{{ restaurant.slug }}/",
   tags: "restaurant",
   eleventyComputed: {
     title: "{{ restaurant.name }} | Menü"
   },
 }
 ---
+{{ restaurant | log }}
 {% from "menu.njk" import table %}
 
 <h2>
@@ -24,7 +25,7 @@
     <br />
     {% if restaurant.homepage %}
     <small>
-        {{ restaurant.homepage | urlize | safe }}
+        {{ restaurant.homepage | urlize(true) | safe }}
     </small>
     {% endif %}
 </h2>
