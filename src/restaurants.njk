@@ -13,7 +13,8 @@
   permalink: "restaurants/{{ restaurant.slug }}/",
   tags: "restaurant",
   eleventyComputed: {
-    title: "{{ restaurant.name }} | Menü"
+    title: "{{ restaurant.name }} | Menü",
+    description: "{{ restaurant.name }} Menü für den {{ page.date | localdate('de-AT') }}"
   },
 }
 ---
