@@ -9,7 +9,7 @@ layout: base
 <div class="row">
     {% for restaurant in (restaurants | values | flatten) %}
     <div class="col-12 col-6-lg">
-        <div class="card">
+        <div class="card restaurant">
             <header>
                 <a href="/restaurants/{{ restaurant.slug }}/">
                     <h2>{{ restaurant.name }}</h2>
