@@ -1,0 +1,44 @@
+---js
+{
+    date: new Date(),
+}
+---
+<!doctype html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="{{ eleventy.generator }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:locale" content="de_AT">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ description }}">
+
+    <link rel="stylesheet" href="/assets/bundle.min.css">
+
+    <title>{{ page.date.toLocaleDateString("de-AT") }} | {{ title }}</title>
+</head>
+
+</html>
+
+<body>
+    <div class="wrapper">
+        <header class="bg-primary">
+            <div class="nav-center">
+                <a href="/">
+                    <h1 class="text-light">{{ page.date.toLocaleDateString("de-AT") }} | Rückkehr des Menüs</h1>
+                </a>
+            </div>
+        </header>
+
+        <main class="container">
+            {{ content | safe }}
+        </main>
+
+        <footer class="row">
+            <div class="col" style="padding: 10px;">
+                {% include "themeswitcher.njk" %}
+            </div>
+        </footer>
+    </div>
+</body>
