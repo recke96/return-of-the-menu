@@ -38,3 +38,7 @@ body.darcula {
     --font-family-sans: sans-serif;
     --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
 }
+
+.card.restaurant {
+    height: 100%;
+}

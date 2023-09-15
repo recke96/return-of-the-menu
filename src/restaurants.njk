@@ -17,7 +17,6 @@
   },
 }
 ---
-{{ restaurant | log }}
 {% from "menu.njk" import table %}
 
 <h2>
@@ -25,7 +24,7 @@
     <br />
     {% if restaurant.homepage %}
     <small>
-        {{ restaurant.homepage | urlize(true) | safe }}
+        {{ restaurant.homepage | urlize | safe }}
     </small>
     {% endif %}
 </h2>
