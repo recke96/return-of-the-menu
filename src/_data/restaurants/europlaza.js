@@ -2,20 +2,47 @@
 
 require("dotenv").config();
 const fetch = require("@11ty/eleventy-fetch");
+const slugify = require("slugify");
 
 module.exports = async function () {
     const token = await fetchAccessToken();
     const data = await fetchRestaurantData(token);
 
-
-    return data;
+    return data
+        .filter((r) => r.menu.length > 0)
+        .map((r) => Object.assign(r, restaurantMetadata[r.slug]));
 }
-
-
 
 const url = {
     api: "https://europlaza.pockethouse.io/api/graphql",
     token: "https://europlaza.pockethouse.io/oauth/token?grant_type=client_credentials&scope=read&redirect_uri=https://app.pockethouse.at&response-type=token",
+};
+
+const restaurantMetadata = {
+    "gourmet-business": {
+        address: {
+            street: "Technologiestraße 5",
+            city: "1120 Wien",
+        },
+        homepage: "https://www.europlaza.at/de/plaza-life/restaurantgourmet/",
+        latLng: [48.16972609172935, 16.334551099907184],
+    },
+    "plaza-eurest": {
+        address: {
+            street: "Am Europlatz 2",
+            city: "1120 Wien",
+        },
+        homepage: "https://www.europlaza.at/de/plaza-life/restaurant-plaza-eurest/",
+        latLng: [48.171102931364416, 16.33321460566478],
+    },
+    "tuk-tuk": {
+        address: {
+            street: "Kranichberggasse 2",
+            city: "1120 Wien",
+        },
+        homepage: "https://www.europlaza.at/de/plaza-life/restaurant-tuk-tuk/",
+        latLng: [48.169888653141534, 16.332994702450772],
+    },
 };
 
 async function fetchAccessToken() {
@@ -96,11 +123,13 @@ async function fetchRestaurantData(accessToken) {
 
     return data.restaurants.map((restaurant) => ({
         name: restaurant.name,
+        slug: slugify(restaurant.name, { lower: true }),
         address: null,
         homepage: null,
         latLng: null,
         menu: restaurant.weekdayMenus
             .flatMap(dayMenu => dayMenu.menuItems)
+            .filter((item) => item.price !== 0)
             .map((item) => ({
                 name: item.title.trim(),
                 description: item.content.trim(),

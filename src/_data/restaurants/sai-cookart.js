@@ -31,6 +31,7 @@ module.exports = async function () {
 
     return [{
         name: "Sai CookArt",
+        slug: "sai-cookart",
         address: {
             street: "Wienerbergstraße 26",
             city: "1120 Wien",
