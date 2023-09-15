@@ -1,7 +1,8 @@
 ---
 title: Rückkehr des Menüs
-description: Europlaza Menüs ohne App!
 layout: base
+eleventyComputed:
+  description: "Europlaza Menüs für den {{ page.date | localdate('de-AT') }} ohne App!"
 ---
 
 {% from "menu.njk" import table %}

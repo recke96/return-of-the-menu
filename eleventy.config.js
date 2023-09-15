@@ -32,6 +32,9 @@ module.exports = function (eleventyConfig) {
         return value;
     })
 
+    eleventyConfig.addFilter("localdate", function(value, locale){
+        return value.toLocaleDateString(locale);
+    });
 
     return {
         dir: {
