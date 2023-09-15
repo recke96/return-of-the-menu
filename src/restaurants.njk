@@ -22,9 +22,11 @@
 <h2>
     {{ restaurant.name }}
     <br />
+    {% if restaurant.homepage %}
     <small>
         {{ restaurant.homepage | urlize | safe }}
     </small>
+    {% endif %}
 </h2>
 
 {{ table(restaurant.menu) }}
