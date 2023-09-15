@@ -1,6 +1,6 @@
 "use strict";
 
-const query = ```
+const query = `
 query ($limit: Int!, $offset: Int!, $from: String!, $to: String!) {
     restaurants: getAllRestaurants(limit: $limit, offset: $offset) {
         id
@@ -18,7 +18,7 @@ query ($limit: Int!, $offset: Int!, $from: String!, $to: String!) {
         }
     }
 }
-```
+`;
 
 const url = {
     api: "https://europlaza.pockethouse.io/api/graphql",
@@ -29,15 +29,39 @@ require("dotenv").config();
 const fetch = require("@11ty/eleventy-fetch");
 
 module.exports = async function () {
-    const europlazaAsset = fetch.RemoteAssetCache(url.api, { duration: "1d", type: "json" });
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
 
-    if (europlazaAsset.isCacheValid()) {
-        return await europlazaAsset.getCachedValue();
-    }
+    const end = new Date();
+    end.setUTCHours(23, 59, 59, 0);
 
     const token = await fetchAccessToken();
-
     
+    const reqBody = {
+        query: query,
+        variables: {
+            limit: 50,
+            offset: 0,
+            from: start.toString(),
+            to: end.toISOString(),
+        },
+    };
+    console.log(reqBody);
+
+    const data = await fetch(url.api, {
+        duration: "1d",
+        type: "json",
+        fetchOptions: {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(reqBody),
+        },
+    });
+
+    return [];
 }
 
 async function fetchAccessToken() {
