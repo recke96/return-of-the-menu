@@ -1,3 +1,8 @@
+---js
+{
+    date: new Date(),
+}
+---
 <!doctype html>
 <html lang="de">
 
@@ -11,7 +16,7 @@
 
     <link rel="stylesheet" href="/assets/bundle.min.css">
 
-    <title>{{ title }}</title>
+    <title>{{ page.date.toLocaleDateString("de-AT") }} | {{ title }}</title>
 </head>
 
 </html>
@@ -21,7 +26,7 @@
         <header class="bg-primary">
             <div class="nav-center">
                 <a href="/">
-                    <h1 class="text-light">Rückkehr des Menüs</h1>
+                    <h1 class="text-light">{{ page.date.toLocaleDateString("de-AT") }} | Rückkehr des Menüs</h1>
                 </a>
             </div>
         </header>
