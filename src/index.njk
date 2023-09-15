@@ -7,7 +7,7 @@ layout: base
 {% from "menu.njk" import table %}
 
 <div class="row">
-    {% for _, restaurant in restaurants %}
+    {% for restaurant in (restaurants | values | flatten) %}
     <div class="col-12 col-6-lg">
         <div class="card">
             <header>
