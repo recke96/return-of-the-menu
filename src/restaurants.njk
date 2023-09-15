@@ -1,15 +1,23 @@
+---js
+{
+  layout: "base",
+  pagination: {
+    data: "restaurants",
+    size: 1,
+    alias: "restaurant",
+    addAllPagesToCollections: true,
+    before: function(pgData, fullData) {
+      return Object.values(fullData.restaurants).flat();
+    },
+  },
+  permalink: "restaurants/{{ restaurant.name | slugify }}/",
+  tags: "restaurant",
+  eleventyComputed: {
+    title: "{{ restaurant.name }} | Menü"
+  },
+}
 ---
-layout: base
-pagination:
-  data: restaurants
-  size: 1
-  resolve: values
-  alias: restaurant
-permalink: "restaurants/{{ restaurant.name | slugify }}/"
-tags: restaurant
-eleventyComputed:
-  title: "{{ restaurant.name }} | Menü"
----
+{{ restaurant | log }}
 {% from "menu.njk" import table %}
 
 <h2>

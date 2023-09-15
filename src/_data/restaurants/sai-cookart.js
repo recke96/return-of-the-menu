@@ -29,7 +29,7 @@ module.exports = async function () {
             })) ?? [],
         }));
 
-    return {
+    return [{
         name: "Sai CookArt",
         address: {
             street: "Wienerbergstraße 26",
@@ -38,5 +38,5 @@ module.exports = async function () {
         homepage: "https://sai-cookart.at",
         latLng: [48.171837, 16.33204],
         menu: menu
-    };
+    }];
 }
