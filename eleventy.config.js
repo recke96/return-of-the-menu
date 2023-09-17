@@ -9,6 +9,13 @@ module.exports = function (eleventyConfig) {
 
     eleventyConfig.addPlugin(EleventyRenderPlugin);
 
+    eleventyConfig.addGlobalData("retryConfig", {
+        // Tuned for 10 tries in 10 min
+        retries: 10,
+        factor: 1.87005,
+        randomize: true,
+    });
+
     eleventyConfig.addFilter("money", function (value) {
         const currency = value?.currency ?? "EUR";
         const currencyStyle = Intl.NumberFormat("de-AT", { style: "currency", currency: currency });
