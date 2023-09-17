@@ -6,7 +6,7 @@
         <p><button class="button clear" onclick="changeTheme('system')">System</button></p>
         <p><button class="button clear" onclick="changeTheme('light')">Hell</button></p>
         <p><button class="button clear" onclick="changeTheme('dark')">Dunkel</button></p>
-        <p><button class="button clear" onclick="changeTheme('darcula')">Darcula</button></p>
+        <p><button class="button clear" onclick="changeTheme('dracula')">Dracula</button></p>
     </div>
 </details>
 
@@ -44,11 +44,11 @@
             document.body.classList.remove("dark");
         }
 
-        if (theme === "darcula") {
-            document.getElementById("theme-select-selected").innerText = "Theme: Darcula";
-            document.body.classList.add("darcula");
+        if (theme === "dracula") {
+            document.getElementById("theme-select-selected").innerText = "Theme: Dracula";
+            document.body.classList.add("dracula");
         } else {
-            document.body.classList.remove("darcula");
+            document.body.classList.remove("dracula");
         }
 
         if (theme === "system") {
