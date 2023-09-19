@@ -3,6 +3,7 @@
 require("dotenv").config();
 const retry = require("async-retry");
 const fetch = require("@11ty/eleventy-fetch");
+const { startOfDay, endOfDay, differenceInSeconds } = require("date-fns");
 const slugify = require("slugify");
 
 module.exports = async function ({ retryConfig }) {
@@ -110,11 +111,10 @@ async function fetchRestaurantData(accessToken) {
         }
     }`;
 
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
+  const start = startOfDay(new Date());
+  const end = endOfDay(new Date());
 
-  const end = new Date();
-  end.setHours(23, 59, 59, 0);
+  const secondsToEnd = differenceInSeconds(end, new Date());
 
   const reqBody = {
     query: query,
@@ -127,7 +127,7 @@ async function fetchRestaurantData(accessToken) {
   };
 
   const { data } = await fetch(url.api, {
-    duration: "1d",
+    duration: `${secondsToEnd}s`,
     type: "json",
     fetchOptions: {
       method: "POST",

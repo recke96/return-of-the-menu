@@ -1,6 +1,7 @@
 "use strict";
 
 const { EleventyRenderPlugin } = require("@11ty/eleventy");
+const { lightFormat } = require("date-fns");
 const sanitize = require("sanitize-html");
 
 /** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
@@ -39,8 +40,8 @@ module.exports = function (eleventyConfig) {
         return value;
     })
 
-    eleventyConfig.addFilter("localdate", function(value, locale){
-        return value.toLocaleDateString(locale);
+    eleventyConfig.addFilter("localdate", function(value, format){
+        return lightFormat(value, format ?? "dd.MM.yyyy");
     });
 
     return {
