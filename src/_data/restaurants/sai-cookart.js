@@ -2,14 +2,16 @@
 
 const fetch = require("@11ty/eleventy-fetch");
 const retry = require("async-retry");
+const { differenceInSeconds, endOfDay } = require("date-fns");
 const url = "https://api.sai-cookart.at/foods?active=true";
 
 module.exports = async function ({ retryConfig }) {
   try {
+    const secondsToEnd = differenceInSeconds(endOfDay(new Date()), new Date());
     const data = await retry(
       () =>
         fetch(url, {
-          duration: "1d",
+          duration: `${secondsToEnd}s`,
           type: "json",
         }),
       {
