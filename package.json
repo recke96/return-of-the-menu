@@ -18,7 +18,7 @@
     "clean-css": "5.3.3",
     "date-fns": "3.0.6",
     "dotenv": "16.3.1",
-    "prettier": "3.1.1",
+    "prettier": "3.2.1",
     "sanitize-html": "2.11.0"
   }
 }
