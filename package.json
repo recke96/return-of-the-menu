@@ -19,6 +19,6 @@
     "date-fns": "3.6.0",
     "dotenv": "16.4.5",
     "prettier": "3.2.5",
-    "sanitize-html": "2.12.1"
+    "sanitize-html": "2.13.0"
   }
 }
