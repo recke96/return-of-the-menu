@@ -8,6 +8,9 @@
             ],
             "@components/*": [
                 "src/components/*"
+            ],
+            "@stores/*": [
+                "src/stores/*"
             ]
         }
     }
