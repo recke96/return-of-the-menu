@@ -1,16 +1,18 @@
 ---
 // Welcome to Astro! Everything between these triple-dash code fences
 // is your "component frontmatter". It never runs in the browser.
-console.log('This runs in your terminal, not the browser!');
+console.log("This runs in your terminal, not the browser!");
 ---
 
 <html>
-  <body>
-    <h1>Hello, World!</h1>
-  </body>
+    <body>
+        <div class:list={["container", "mx-auto"]}>
+            <h1 class:list={["text-center", "text-2xl"]}>Hello, World!</h1>
+        </div>
+    </body>
 </html>
 <style>
-  h1 {
-    color: orange;
-  }
+    h1 {
+        color: orange;
+    }
 </style>
