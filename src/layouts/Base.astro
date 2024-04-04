@@ -14,17 +14,25 @@ const { title } = Astro.props;
     <meta charset="utf-8" />
     <meta name="generator" content={Astro.generator} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
     <title>{title}</title>
 
+    <script is:inline>
+      // Prevent the FART effect.
+      const theme = localStorage.getItem("theme");
+      if (theme && theme !== "system") {
+        document.documentElement.setAttribute("data-theme", value);
+      }
+    </script>
     <script>
-        import { $theme } from "@stores/theme";
-        $theme.subscribe((value, _) => {
-            if (value && value !== "system") {
-                document.documentElement.setAttribute("data-theme", value);
-            } else {
-                document.documentElement.removeAttribute("data-theme");
-            }
-        });
+      import { $theme } from "@stores/theme";
+      $theme.subscribe((value, _) => {
+        if (value && value !== "system") {
+          document.documentElement.setAttribute("data-theme", value);
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+        }
+      });
     </script>
   </head>
 
