@@ -1,0 +1,15 @@
+---
+import { format } from "date-fns";
+import { deAT } from "date-fns/locale";
+
+interface Props {
+  date: Date;
+  formatString?: string;
+}
+
+const { date, formatString = "dd.MM.yyyy HH.mm" } = Astro.props;
+---
+
+<time datetime={format(date, "yyyy-MM-dd")}>
+  {format(date, formatString, { locale: deAT })}
+</time>
