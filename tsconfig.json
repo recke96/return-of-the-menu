@@ -1,17 +1,18 @@
 {
-    "extends": "astro/tsconfigs/strictest",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@layouts/*": [
-                "src/layouts/*"
-            ],
-            "@components/*": [
-                "src/components/*"
-            ],
-            "@stores/*": [
-                "src/stores/*"
-            ]
-        }
-    }
+  "extends": "astro/tsconfigs/strictest",
+  "compilerOptions": {
+    "baseUrl": "/home/jecker/Programming/return-of-the-menu",
+    "paths": {
+      "@layouts/*": [
+        "src/layouts/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@stores/*": [
+        "src/stores/*"
+      ]
+    },
+    "jsx": "preserve"
+  }
 }

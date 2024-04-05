@@ -1,5 +1,6 @@
 ---
 import FormattedDate from "@components/FormattedDate.astro";
+import ThemePicker from "@components/ThemePicker.vue";
 
 interface Props {
   title: string;
@@ -21,13 +22,13 @@ const { title } = Astro.props;
       // Prevent the FART effect.
       const theme = localStorage.getItem("theme");
       if (theme && theme !== "system") {
-        document.documentElement.setAttribute("data-theme", value);
+        document.documentElement.setAttribute("data-theme", theme);
       }
     </script>
     <script>
       import { $theme } from "@stores/theme";
       $theme.subscribe((value, _) => {
-        if (value && value !== "system") {
+        if (value !== "system") {
           document.documentElement.setAttribute("data-theme", value);
         } else {
           document.documentElement.removeAttribute("data-theme");
@@ -43,12 +44,14 @@ const { title } = Astro.props;
         <h1 class="text-center text-primary-content">
           <FormattedDate date={today} formatString="EEEE" />
           <br />
-          <small class="prose prose-xl text-primary-content">
+          <small class="text-primary-content">
             <FormattedDate date={today} formatString="dd.MM.yyyy" />
           </small>
         </h1>
       </div>
-      <div class="navbar-end"></div>
+      <div class="navbar-end">
+        <ThemePicker client:load/>
+      </div>
     </header>
     <main class="container mx-auto">
       <slot />
