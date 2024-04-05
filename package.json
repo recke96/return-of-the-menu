@@ -17,6 +17,7 @@
     "@nanostores/vue": "^0.10.0",
     "@tailwindcss/typography": "^0.5.12",
     "astro": "^4.5.15",
+    "astro-icon": "^1.1.0",
     "daisyui": "^4.9.0",
     "date-fns": "^3.6.0",
     "nanostores": "^0.10.2",
