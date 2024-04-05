@@ -13,6 +13,8 @@
     "@astrojs/check": "^0.5.10",
     "@astrojs/tailwind": "^5.1.0",
     "@astrojs/vue": "^4.0.10",
+    "@iconify-json/mdi": "^1.1.65",
+    "@iconify-json/simple-icons": "^1.1.98",
     "@nanostores/persistent": "^0.10.1",
     "@nanostores/vue": "^0.10.0",
     "@tailwindcss/typography": "^0.5.12",
