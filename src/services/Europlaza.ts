@@ -1,4 +1,5 @@
 import { addSeconds, format } from "date-fns";
+import { compile } from "html-to-text";
 import type { MenuItem, RestaurantService } from "./RestaurantService";
 import query from "./EuroplazaQuery.graphql?raw";
 
@@ -28,6 +29,8 @@ type EuroplazaRestaurant = {
   name: string;
   weekdayMenus: ReadonlyArray<EuroplazaWeekdayMenu>;
 };
+
+const htmlToText = compile()
 
 export class EuroplazaRestaurantService implements RestaurantService {
   constructor(private user: string, private password: string) {}
@@ -77,7 +80,7 @@ export class EuroplazaRestaurantService implements RestaurantService {
         restaurant: { slug: restaurant, name: restaurantMenu.name },
         menu: `${restaurant}-${dm.id}-${mi.id}`,
         name: mi.title,
-        description: mi.content,
+        description: htmlToText(mi.content),
         price: mi.price / 100,
         currency: mi.currency,
       }))
