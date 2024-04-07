@@ -1,0 +1,18 @@
+---
+import Base from "@layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const restaurants = await getCollection("restaurants");
+  return restaurants.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+---
+
+<Base title={entry.data.name}>
+  <a href={entry.data.homepage}>Homepage</a>
+</Base>
