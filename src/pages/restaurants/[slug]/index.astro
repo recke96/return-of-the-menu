@@ -1,7 +1,9 @@
 ---
 import Base from "@layouts/Base.astro";
 import { getCollection } from "astro:content";
-import { EuroplazaRestaurantService } from "src/services/Europlaza";
+import { GET } from "./[date].json";
+import { format } from "date-fns";
+import type { MenuItem } from "src/services/RestaurantService";
 
 export async function getStaticPaths() {
   const restaurants = await getCollection("restaurants");
@@ -11,13 +13,14 @@ export async function getStaticPaths() {
   }));
 }
 
-const today = new Date();
-const svc = new EuroplazaRestaurantService(
-  import.meta.env.EUROPLAZA_USER,
-  import.meta.env.EUROPLAZA_PASSWORD
-);
+const today = new Date(2024, 4, 1);
 const { entry } = Astro.props;
-const menu = await svc.getMenu(entry.id, today);
+
+const response = await GET({
+  ...Astro,
+  params: { slug: entry.id, date: format(today, "yyyy-MM-dd") },
+});
+const menu: ReadonlyArray<MenuItem> = await response.json();
 ---
 
 <Base title={entry.data.name}>
