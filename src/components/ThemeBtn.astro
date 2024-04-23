@@ -52,6 +52,15 @@ const { theme } = Astro.props;
         const theme = this.dataset.theme;
         const btn = this.querySelector("button");
         btn?.addEventListener("click", () => $theme.set(theme));
+
+        const icon = this.querySelector("svg");
+        $theme.subscribe((value, _) => {
+          if (theme === value) {
+            icon?.classList?.remove("invisible");
+          } else {
+            icon?.classList?.add("invisible");
+          }
+        });
       }
     }
 
