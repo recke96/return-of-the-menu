@@ -1,0 +1,23 @@
+---
+import ThemeBtn from "./ThemeBtn.astro";
+---
+
+<div class="dropdown dropdown-end">
+  <div tabindex="0" role="button" class="btn btn-ghost">Theme</div>
+  <div
+    class="dropdown-content rounded-box bg-base-200 text-base-content outline-1 outline-black/5 overflow-y-auto border shadow-2x1 w-56"
+  >
+    <div class="grid grid-cols-1 gap-3 p-3">
+      <ThemeBtn />
+    </div>
+    <div class="grid grid-cols-1 gap-3 p-3">
+      <ThemeBtn theme="light" />
+    </div>
+    <div class="grid grid-cols-1 gap-3 p-3">
+      <ThemeBtn theme="dark" />
+    </div>
+    <div class="grid grid-cols-1 gap-3 p-3">
+      <ThemeBtn theme="dracula" />
+    </div>
+  </div>
+</div>
