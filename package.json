@@ -4,8 +4,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "lint": "eslint src/ --max-warnings 0",
-    "build": "astro check && astro build",
+    "check": "astro check && eslint src/ --max-warnings 0",
+    "prebuild": "bun run check",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -13,6 +14,7 @@
     "@astrojs/check": "0.5.10",
     "@astrojs/tailwind": "5.1.0",
     "@eslint/js": "9.1.1",
+    "@nanostores/persistent": "0.10.1",
     "@tailwindcss/typography": "^0.5.12",
     "@types/bun": "1.1.0",
     "@typescript-eslint/parser": "7.7.1",
@@ -20,6 +22,7 @@
     "daisyui": "4.10.2",
     "eslint": "9.1.1",
     "eslint-plugin-astro": "0.34.0",
+    "nanostores": "0.10.3",
     "tailwindcss": "3.4.3",
     "typescript": "5.4.5",
     "typescript-eslint": "7.7.1"
