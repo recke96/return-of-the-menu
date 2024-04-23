@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+
+    <title>{title}</title>
+  </head>
+  <body class="max-w-full">
+    <header class="navbar bg-primary text-primary-content">
+      <div class="navbar-start"><slot name="navbar-start" /></div>
+      <div class="navbar-center"><slot name="navbar-center" /></div>
+      <div class="navbar-end"><slot name="navbar-end" /></div>
+    </header>
+    <main class="container mx-auto mt-4 prose">
+      <slot />
+    </main>
+  </body>
+</html>
