@@ -1,6 +1,7 @@
 {
   "recommendations": [
-    "ginfuru.better-nunjucks",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "astro-build.astro-vscode",
+    "oven.bun-vscode"
   ]
 }
