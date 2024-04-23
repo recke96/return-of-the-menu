@@ -9,11 +9,12 @@ const { theme } = Astro.props;
 ---
 
 <theme-btn
-  data-theme={theme}
+  data-set-theme={theme}
   class="outline-base-content text-start outline-offset-4"
 >
   <button
-    class="bg-base-100 rounded-btn text-base-content block w-full cursor-pointer"
+    data-theme={theme}
+    class="btn rounded-btn bg-base-100 text-base-content block w-full cursor-pointer"
   >
     <span class="grid grid-cols-5 grid-rows-3">
       <span
@@ -50,7 +51,7 @@ const { theme } = Astro.props;
       constructor() {
         super();
 
-        const theme = this.dataset.theme as Themes | undefined;
+        const theme = this.dataset.setTheme as Themes | undefined;
         const btn = this.querySelector("button");
         btn?.addEventListener("click", () => $theme.set(theme));
 
