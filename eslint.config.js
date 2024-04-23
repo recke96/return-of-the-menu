@@ -16,4 +16,10 @@ export default tsEslint.config(
       },
     },
   },
+  {
+    files: ["src/env.d.ts"],
+    rules: {
+      "@typescript-eslint/triple-slash-reference": "off"
+    }
+  }
 );
