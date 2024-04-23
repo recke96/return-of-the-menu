@@ -43,13 +43,14 @@ const { theme } = Astro.props;
   </button>
 
   <script>
+    import type { Themes } from "@stores/theme";
     import { $theme } from "@stores/theme";
 
     class ThemeBtn extends HTMLElement {
       constructor() {
         super();
 
-        const theme = this.dataset.theme;
+        const theme = this.dataset.theme as Themes | undefined;
         const btn = this.querySelector("button");
         btn?.addEventListener("click", () => $theme.set(theme));
 
