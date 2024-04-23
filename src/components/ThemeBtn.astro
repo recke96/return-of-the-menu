@@ -1,5 +1,6 @@
 ---
 import type { Themes } from "@stores/theme";
+import { Icon } from "astro-icon/components";
 
 interface Props {
   theme?: Themes;
@@ -20,18 +21,7 @@ const { theme } = Astro.props;
       <span
         class="col-span-5 row-span-3 row-start-1 flex items-center gap-2 px-4 py-3"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="invisible h-3 w-3 shrink-0"
-        >
-          <path
-            d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"
-          ></path>
-        </svg>
+        <Icon name="mdi:check-bold" />
         <span class="flex-grow text-sm">{theme ?? "system"}</span>
         <span class="flex h-full shrink-0 flex-wrap gap-1">
           <span class="bg-primary rounded-badge w-2"></span>
@@ -55,7 +45,7 @@ const { theme } = Astro.props;
         const btn = this.querySelector("button");
         btn?.addEventListener("click", () => $theme.set(theme));
 
-        const icon = this.querySelector("svg");
+        const icon = this.querySelector("[data-icon]");
         $theme.subscribe((value, _) => {
           if (theme === value) {
             icon?.classList?.remove("invisible");
