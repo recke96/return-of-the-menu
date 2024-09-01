@@ -2,5 +2,11 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node:22-bookworm",
   "features": {
     "ghcr.io/astronomer/devcontainer-features/astro-cli:1": {}
+  },
+  "runArgs": [
+    "--userns=keep-id"
+  ],
+  "containerEnv":{
+    "HOME": "/home/node"
   }
 }
