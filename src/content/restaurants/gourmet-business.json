@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../.astro/collections/restaurants.schema.json",
+  "name": "Gourmet Business",
+  "address": {
+    "street": "Technologiestraße 5",
+    "city": "1120 Wien"
+  },
+  "homepage": "https://www.europlaza.at/de/plaza-life/restaurantgourmet/",
+  "latLng": [48.16972609172935, 16.334551099907184]
+}

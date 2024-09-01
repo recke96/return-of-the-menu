@@ -26,5 +26,8 @@ dist-ssr
 # Eleventy-Fetch cache
 .cache
 
+# Astro meta
+.astro/
+
 # Debug environment vars
 .env

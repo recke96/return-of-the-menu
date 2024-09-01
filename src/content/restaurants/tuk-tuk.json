@@ -1,0 +1,13 @@
+{
+  "$schema": "../../../.astro/collections/restaurants.schema.json",
+  "name": "Tuk Tuk",
+  "address": {
+    "street": "Kranichberggasse 2",
+    "city": "1120 Wien"
+  },
+  "homepage": "https://www.europlaza.at/de/plaza-life/restaurant-tuk-tuk/",
+  "latLng": [
+    48.169888653141534,
+    16.332994702450772
+  ]
+}
