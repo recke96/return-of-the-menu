@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "commonjs",
   "scripts": {
-    "start": "npx @11ty/eleventy --serve --incremental",
-    "build": "npx @11ty/eleventy"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build"
   },
   "engines": {
     "node": ">=16"
@@ -20,5 +21,11 @@
     "dotenv": "16.4.5",
     "prettier": "3.3.3",
     "sanitize-html": "2.13.0"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.3",
+    "@astrojs/ts-plugin": "^1.10.1",
+    "astro": "^4.15.1",
+    "typescript": "^5.5.4"
   }
 }

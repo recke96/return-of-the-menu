@@ -1,0 +1,64 @@
+<details id="themeswitcher" class="dropdown">
+    <summary id="theme-select-selected" class="button outline dark">
+        Theme:
+    </summary>
+    <div class="card">
+        <p>
+            <button class="button clear" onclick="changeTheme('system')">System</button>
+        </p>
+        <p>
+            <button class="button clear" onclick="changeTheme('light')">Hell</button>
+        </p>
+        <p>
+            <button class="button clear" onclick="changeTheme('dark')">Dunkel</button>
+        </p>
+        <p>
+            <button class="button clear" onclick="changeTheme('dracula')">Dracula</button>
+        </p>
+    </div>
+</details>
+
+<script>
+    const savedTheme = localStorage.getItem("theme") ?? "system";
+    const pref = window.matchMedia("(prefers-color-scheme: dark)");
+    const onPrefChange = (evt: MediaQueryListEvent) => {
+        if (evt.matches) {
+            document.body.classList.remove("light");
+            document.body.classList.add("dark");
+        } else {
+            document.body.classList.remove("dark");
+            document.body.classList.add("light");
+        }
+    };
+
+    const handleThemeChange = (selectedTheme: string, themeName: string, displayName: string) => {
+        if (selectedTheme === themeName) {
+            document.getElementById("theme-select-selected")!.innerText = `Theme: ${displayName}`;
+            document.body.classList.add(themeName);
+        } else {
+            document.body.classList.remove(themeName);
+        }
+    }
+
+    const changeTheme = (selectedTheme: string) => {
+        localStorage.setItem("theme", selectedTheme);
+
+        handleThemeChange(selectedTheme, "light", "Hell");
+        handleThemeChange(selectedTheme, "dark", "Dunkel");
+        handleThemeChange(selectedTheme, "dracula", "Dracula");
+
+        if (selectedTheme === "system") {
+            document.getElementById("theme-select-selected")!.innerText = "Theme: System";
+            pref.addEventListener("change", onPrefChange);
+            if (pref.matches) {
+                document.body.classList.add("dark");
+            } else {
+                document.body.classList.add("light");
+            }
+        } else {
+            pref.removeEventListener("change", onPrefChange);
+        }
+    };
+
+    changeTheme(savedTheme);
+</script>
