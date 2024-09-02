@@ -1,6 +1,7 @@
 import {z, defineCollection} from "astro:content";
-import {europlazaLoader} from "./menu/europlaza.mjs";
-import {EUROPLAZA_PASSWORD, EUROPLAZA_USER} from "astro:env/server";
+// import {europlazaLoader} from "./menu/europlaza.mjs";
+// import {EUROPLAZA_PASSWORD, EUROPLAZA_USER} from "astro:env/server";
+import {saiCookartLoader} from "./menu/sai-cookart.mjs";
 
 const restaurants = defineCollection({
     type: "data",
@@ -19,10 +20,7 @@ const restaurants = defineCollection({
 })
 const menu = defineCollection({
     type: "content_layer",
-    loader: europlazaLoader({
-        user: EUROPLAZA_USER,
-        password: EUROPLAZA_PASSWORD
-    })
+    loader: saiCookartLoader()
 });
 
 export const collections = {restaurants, menu}

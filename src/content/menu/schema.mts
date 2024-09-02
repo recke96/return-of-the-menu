@@ -21,7 +21,7 @@ export const MenuItemSchema = z.object({
     restaurant: KnownRestaurantsSchema,
     name: z.string(),
     description: z.string(),
-    price: MoneySchema,
+    price: MoneySchema.nullable(),
     options: z.array(MenuItemOptionSchema)
 });
 
