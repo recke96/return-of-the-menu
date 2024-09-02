@@ -1,13 +1,10 @@
 import {z} from "astro:content"
 import type {Loader, LoaderContext} from "astro/loaders";
-import {retry, handleAll, ExponentialBackoff, wrap, fallback} from "cockatiel";
 import {addMinutes, endOfDay, startOfDay} from "date-fns";
 import slugify from "slugify";
-import * as cheerio from "cheerio/slim";
 import {KnownRestaurantsSchema, MenuItemSchema, MoneySchema} from "./schema.mjs";
 import {fromError} from "zod-validation-error";
-
-const retryPolicy = retry(handleAll, {maxAttempts: 3, backoff: new ExponentialBackoff({initialDelay: 256})})
+import {createPolicy, htmlToText} from "./util.mts";
 
 export interface EuroplazaUserConfig {
     readonly user: string;
@@ -22,7 +19,6 @@ export interface EuroplazaLoaderOptions {
 export const DefaultEuroplazaLoaderOptions = {
     tokenEndpoint: "https://europlaza.pockethouse.io/oauth/token?grant_type=client_credentials&scope=read&redirect_uri=https://app.pockethouse.at&response-type=token",
     apiEndpoint: "https://europlaza.pockethouse.io/api/graphql",
-    policy: retryPolicy,
 } as EuroplazaLoaderOptions;
 
 export function europlazaLoader(options: EuroplazaUserConfig & Partial<EuroplazaLoaderOptions>): Loader {
@@ -31,12 +27,7 @@ export function europlazaLoader(options: EuroplazaUserConfig & Partial<Europlaza
         name: "europlaza-loader",
         schema: MenuItemSchema,
         load: async (loaderCtx) => {
-            const policy = wrap(
-                fallback(handleAll, () => {
-                    loaderCtx.logger.error("Failed to many times, aborting europlaza menu");
-                }),
-                retryPolicy,
-            );
+            const policy = createPolicy(loaderCtx.logger);
             await policy.execute(async ({attempt, signal}) => {
                 if (attempt > 1) {
                     loaderCtx.logger.warn(`Attempt ${attempt}`);
@@ -111,12 +102,10 @@ async function fetchAccessToken(user: string, password: string, tokenEndpoint: s
     throw new Error();
 }
 
-const sanitize = (val: string) => cheerio.load(val).text();
-
 const EuroplazaMenuItemSchema = z.object({
     id: z.coerce.string(),
-    title: z.string().transform((val, _ctx) => sanitize(val).trim()),
-    content: z.string().transform((val, _ctx) => sanitize(val).trim()),
+    title: z.string().transform(htmlToText),
+    content: z.string().transform(htmlToText),
     price: z.coerce.number(),
     currency: MoneySchema.shape.currency
 });
