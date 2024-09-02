@@ -1,12 +1,13 @@
 import {z} from "astro:content"
 import type {Loader, LoaderContext} from "astro/loaders";
-import {retry, handleAll, ExponentialBackoff, type IPolicy} from "cockatiel";
+import {retry, handleAll, ExponentialBackoff, wrap, fallback} from "cockatiel";
 import {addMinutes, endOfDay, startOfDay} from "date-fns";
 import slugify from "slugify";
-import sanitizeHtml from "sanitize-html"
+import * as cheerio from "cheerio/slim";
 import {KnownRestaurantsSchema, MenuItemSchema, MoneySchema} from "./schema.mjs";
+import {fromError} from "zod-validation-error";
 
-const retryPolicy = retry(handleAll, {maxAttempts: 3, backoff: new ExponentialBackoff()})
+const retryPolicy = retry(handleAll, {maxAttempts: 3, backoff: new ExponentialBackoff({initialDelay: 256})})
 
 export interface EuroplazaUserConfig {
     readonly user: string;
@@ -16,7 +17,6 @@ export interface EuroplazaUserConfig {
 export interface EuroplazaLoaderOptions {
     readonly tokenEndpoint: string,
     readonly apiEndpoint: string;
-    readonly policy: IPolicy;
 }
 
 export const DefaultEuroplazaLoaderOptions = {
@@ -27,12 +27,21 @@ export const DefaultEuroplazaLoaderOptions = {
 
 export function europlazaLoader(options: EuroplazaUserConfig & Partial<EuroplazaLoaderOptions>): Loader {
     const realizedOptions = Object.assign({}, DefaultEuroplazaLoaderOptions, options);
-
     return {
         name: "europlaza-loader",
         schema: MenuItemSchema,
         load: async (loaderCtx) => {
-            await realizedOptions.policy.execute(async ({signal}) => {
+            const policy = wrap(
+                fallback(handleAll, () => {
+                    loaderCtx.logger.error("Failed to many times, aborting europlaza menu");
+                }),
+                retryPolicy,
+            );
+            await policy.execute(async ({attempt, signal}) => {
+                if (attempt > 1) {
+                    loaderCtx.logger.warn(`Attempt ${attempt}`);
+                }
+
                 const token = await fetchAccessToken(realizedOptions.user, realizedOptions.password, realizedOptions.tokenEndpoint, loaderCtx, signal);
                 await fetchRestaurantData(token, realizedOptions.apiEndpoint, loaderCtx, signal);
             })
@@ -56,7 +65,7 @@ const jsonParsingPreprocessor = (value: any, ctx: z.RefinementCtx) => {
 }
 
 const CachedTokenSchema = z.preprocess(jsonParsingPreprocessor, z.object({
-    expiresAt: z.coerce.date(),
+    expiresAt: z.string().datetime().transform((val) => new Date(val)),
     token: z.string(),
 })).optional();
 
@@ -69,9 +78,10 @@ async function fetchAccessToken(user: string, password: string, tokenEndpoint: s
     const cachedToken = await CachedTokenSchema.parseAsync(cachedTokenStr);
 
     if (cachedToken && cachedToken.expiresAt < now) {
-        ctx.logger.info(`fetchAccessToken - Cache-Hit`)
+        ctx.logger.info(`fetchAccessToken - Cache-Hit:\n${JSON.stringify(cachedToken)}`)
         return cachedToken.token;
     }
+    ctx.meta.delete(cacheKey);
 
     const auth = Buffer.from(`${user}:${password}`).toString("base64");
     const response = await fetch(tokenEndpoint, {
@@ -87,7 +97,7 @@ async function fetchAccessToken(user: string, password: string, tokenEndpoint: s
     const body = await response.json();
     ctx.logger.debug(`fetchAccessToken - Result ${response.status} ${response.statusText}:\n${JSON.stringify(body)}`);
 
-    if (response.status === 200 && "access_token" in body) {
+    if (response.ok && "access_token" in body) {
         const entry = {
             expiresAt: addMinutes(now, 30),
             token: body.access_token,
@@ -97,11 +107,11 @@ async function fetchAccessToken(user: string, password: string, tokenEndpoint: s
         return entry!.token;
     }
 
-    throw Error(`Unexpected result for fetchAccessToken: ${response.status} ${response.statusText}`)
+    ctx.logger.error(`Unexpected result for fetchAccessToken: ${response.status} ${response.statusText}`);
+    throw new Error();
 }
 
-const sanitizeStrip = {allowedTags: [], allowedAttributes: {}};
-const sanitize = (val: string) => sanitizeHtml(val, sanitizeStrip);
+const sanitize = (val: string) => cheerio.load(val).text();
 
 const EuroplazaMenuItemSchema = z.object({
     id: z.coerce.string(),
@@ -172,13 +182,26 @@ async function fetchRestaurantData(accessToken: string, apiEndpoint: string, ctx
     });
 
     const {data} = await response.json();
-    const {restaurants} = await EuroplazaRestaurantsSchema.parseAsync(data);
 
-    for (const restaurant of restaurants) {
+    ctx.logger.debug(`fetchRestaurantData - Result ${response.status} ${response.statusText}:\n${JSON.stringify(data)}`);
+
+    if (!response.ok) {
+        ctx.logger.error(`fetchRestaurantData - Unexpected result: ${response.status} ${response.statusText}`);
+        throw new Error();
+    }
+
+
+    const restaurantsResult = await EuroplazaRestaurantsSchema.safeParseAsync(data);
+    if (!restaurantsResult.success) {
+        ctx.logger.error(fromError(restaurantsResult.error).toString());
+        throw new Error();
+    }
+
+    for (const restaurant of restaurantsResult.data.restaurants) {
         const slug = slugify(restaurant.name, {lower: true, trim: true});
         const idResult = await KnownRestaurantsSchema.safeParseAsync(slug);
-        if (idResult.error) {
-            ctx.logger.warn(`Encountered unknown restaurant "${restaurant.name}" (${slug}) - skipping`);
+        if (!idResult.success) {
+            ctx.logger.warn(`fetchRestaurantData - Encountered unknown restaurant "${restaurant.name}" (${slug}) - skipping`);
             continue;
         }
 

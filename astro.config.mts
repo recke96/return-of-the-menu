@@ -1,6 +1,7 @@
 import {defineConfig, envField} from "astro/config";
 
 export default defineConfig({
+
     experimental: {
         contentLayer: true,
         env: {

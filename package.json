@@ -28,7 +28,9 @@
     "@types/node": "^22.5.2",
     "@types/sanitize-html": "^2.13.0",
     "astro": "^4.15.1",
+    "cheerio": "^1.0.0",
     "cockatiel": "^3.2.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "zod-validation-error": "^3.3.1"
   }
 }
