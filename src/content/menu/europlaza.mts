@@ -1,43 +1,51 @@
-import {z} from "astro:content"
-import type {Loader, LoaderContext} from "astro/loaders";
+import {type MetaStore, z} from "astro:content"
 import {addMinutes, endOfDay, startOfDay} from "date-fns";
 import slugify from "slugify";
-import {KnownRestaurantsSchema, MenuItemSchema, MoneySchema} from "./schema.mjs";
+import {KnownRestaurantsSchema, type MenuItem, MenuItemSchema, MoneySchema} from "./schema.mjs";
 import {fromError} from "zod-validation-error";
 import {createPolicy, htmlToText} from "./util.mts";
+import type {AstroIntegrationLogger} from "astro";
 
-export interface EuroplazaUserConfig {
+type EuroplazaRequiredConfig = {
     readonly user: string;
     readonly password: string;
+    readonly logger: AstroIntegrationLogger;
+    readonly meta: MetaStore;
 }
 
-export interface EuroplazaLoaderOptions {
-    readonly tokenEndpoint: string,
+type EuroplazaOptionalConfig = {
+    readonly tokenEndpoint: string;
     readonly apiEndpoint: string;
 }
+
+export type EuroplazaConfig = EuroplazaRequiredConfig & Partial<EuroplazaOptionalConfig>;
 
 export const DefaultEuroplazaLoaderOptions = {
     tokenEndpoint: "https://europlaza.pockethouse.io/oauth/token?grant_type=client_credentials&scope=read&redirect_uri=https://app.pockethouse.at&response-type=token",
     apiEndpoint: "https://europlaza.pockethouse.io/api/graphql",
-} as EuroplazaLoaderOptions;
+} as EuroplazaOptionalConfig;
 
-export function europlazaLoader(options: EuroplazaUserConfig & Partial<EuroplazaLoaderOptions>): Loader {
-    const realizedOptions = Object.assign({}, DefaultEuroplazaLoaderOptions, options);
-    return {
-        name: "europlaza-loader",
-        schema: MenuItemSchema,
-        load: async (loaderCtx) => {
-            const policy = createPolicy(loaderCtx.logger);
-            await policy.execute(async ({attempt, signal}) => {
-                if (attempt > 1) {
-                    loaderCtx.logger.warn(`Attempt ${attempt}`);
-                }
+export async function loadEuroplazaMenu(options: EuroplazaConfig): Promise<Array<MenuItem>> {
+    const {
+        logger,
+        meta,
+        apiEndpoint,
+        tokenEndpoint,
+        user,
+        password
+    } = Object.assign({}, DefaultEuroplazaLoaderOptions, options);
 
-                const token = await fetchAccessToken(realizedOptions.user, realizedOptions.password, realizedOptions.tokenEndpoint, loaderCtx, signal);
-                await fetchRestaurantData(token, realizedOptions.apiEndpoint, loaderCtx, signal);
-            })
+    const policy = createPolicy(logger);
+    return await policy.execute(async ({attempt, signal}) => {
+        if (attempt > 1) {
+            logger.warn(`Attempt ${attempt}`);
         }
-    }
+
+        const token = await fetchAccessToken(user, password, tokenEndpoint, logger, meta, signal);
+        const menuGenerator = fetchRestaurantData(token, apiEndpoint, logger, signal);
+
+        return await Array.fromAsync(menuGenerator);
+    })
 }
 
 const jsonParsingPreprocessor = (value: any, ctx: z.RefinementCtx) => {
@@ -62,17 +70,17 @@ const CachedTokenSchema = z.preprocess(jsonParsingPreprocessor, z.object({
 
 type CachedToken = z.infer<typeof CachedTokenSchema>;
 
-async function fetchAccessToken(user: string, password: string, tokenEndpoint: string, ctx: LoaderContext, signal?: AbortSignal): Promise<string> {
+async function fetchAccessToken(user: string, password: string, tokenEndpoint: string, logger: AstroIntegrationLogger, meta: MetaStore, signal: AbortSignal): Promise<string> {
     const now = new Date();
     const cacheKey = "europlaza-token";
-    const cachedTokenStr = ctx.meta.get(cacheKey);
+    const cachedTokenStr = meta.get(cacheKey);
     const cachedToken = await CachedTokenSchema.parseAsync(cachedTokenStr);
 
     if (cachedToken && cachedToken.expiresAt < now) {
-        ctx.logger.info(`fetchAccessToken - Cache-Hit:\n${JSON.stringify(cachedToken)}`)
+        logger.info(`Cache-Hit:\n${JSON.stringify(cachedToken)}`)
         return cachedToken.token;
     }
-    ctx.meta.delete(cacheKey);
+    meta.delete(cacheKey);
 
     const auth = Buffer.from(`${user}:${password}`).toString("base64");
     const response = await fetch(tokenEndpoint, {
@@ -82,11 +90,11 @@ async function fetchAccessToken(user: string, password: string, tokenEndpoint: s
             Authorization: `Basic ${auth}`,
         },
         body: "grant_type=client_credentials",
-        signal: signal ?? null
+        signal: signal
     });
 
     const body = await response.json();
-    ctx.logger.debug(`fetchAccessToken - Result ${response.status} ${response.statusText}:\n${JSON.stringify(body)}`);
+    logger.debug(`Access-Token-Result ${response.status} ${response.statusText}:\n${JSON.stringify(body)}`);
 
     if (response.ok && "access_token" in body) {
         const entry = {
@@ -94,11 +102,11 @@ async function fetchAccessToken(user: string, password: string, tokenEndpoint: s
             token: body.access_token,
         } as CachedToken;
 
-        ctx.meta.set(cacheKey, JSON.stringify(entry));
+        meta.set(cacheKey, JSON.stringify(entry));
         return entry!.token;
     }
 
-    ctx.logger.error(`Unexpected result for fetchAccessToken: ${response.status} ${response.statusText}`);
+    logger.error(`Unexpected result: ${response.status} ${response.statusText}`);
     throw new Error();
 }
 
@@ -126,7 +134,7 @@ const EuroplazaRestaurantsSchema = z.object({
     restaurants: z.array(EuroplazaRestaurantSchema),
 })
 
-async function fetchRestaurantData(accessToken: string, apiEndpoint: string, ctx: LoaderContext, signal?: AbortSignal) {
+async function* fetchRestaurantData(accessToken: string, apiEndpoint: string, logger: AstroIntegrationLogger, signal: AbortSignal): AsyncGenerator<MenuItem> {
     const query = `
     query ($limit: Int!, $offset: Int!, $from: String!, $to: String!) {
         restaurants: getAllRestaurants(limit: $limit, offset: $offset) {
@@ -167,22 +175,22 @@ async function fetchRestaurantData(accessToken: string, apiEndpoint: string, ctx
             Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(reqBody),
-        signal: signal ?? null,
+        signal: signal,
     });
 
     const {data} = await response.json();
 
-    ctx.logger.debug(`fetchRestaurantData - Result ${response.status} ${response.statusText}:\n${JSON.stringify(data)}`);
+    logger.debug(`Result ${response.status} ${response.statusText}:\n${JSON.stringify(data)}`);
 
     if (!response.ok) {
-        ctx.logger.error(`fetchRestaurantData - Unexpected result: ${response.status} ${response.statusText}`);
+        logger.error(`Unexpected result: ${response.status} ${response.statusText}`);
         throw new Error();
     }
 
 
     const restaurantsResult = await EuroplazaRestaurantsSchema.safeParseAsync(data);
     if (!restaurantsResult.success) {
-        ctx.logger.error(fromError(restaurantsResult.error).toString());
+        logger.error(fromError(restaurantsResult.error).toString());
         throw new Error();
     }
 
@@ -190,31 +198,27 @@ async function fetchRestaurantData(accessToken: string, apiEndpoint: string, ctx
         const slug = slugify(restaurant.name, {lower: true, trim: true});
         const idResult = await KnownRestaurantsSchema.safeParseAsync(slug);
         if (!idResult.success) {
-            ctx.logger.warn(`fetchRestaurantData - Encountered unknown restaurant "${restaurant.name}" (${slug}) - skipping`);
+            logger.warn(`Encountered unknown restaurant "${restaurant.name}" (${slug}) - skipping`);
             continue;
         }
 
         for (const menu of restaurant.weekdayMenus) {
             for (const item of menu.menuItems) {
-                const entryId = `${restaurant.id}/${menu.id}/${item.id}`;
-                const data = await ctx.parseData({
-                    id: entryId,
-                    data: {
-                        restaurant: idResult.data,
-                        name: item.title,
-                        description: item.content,
-                        price: {
-                            amount: item.price / 100,
-                            currency: item.currency,
-                        }
+                const itemResult = await MenuItemSchema.safeParseAsync({
+                    restaurant: idResult.data,
+                    name: item.title,
+                    description: item.content,
+                    price: {
+                        amount: item.price / 100,
+                        currency: item.currency,
                     }
                 });
 
-                ctx.store.set({
-                    id: entryId,
-                    data: data,
-                    digest: ctx.generateDigest(data)
-                })
+                if (itemResult.success) {
+                    yield itemResult.data;
+                } else {
+                    logger.warn(`Could not parse data: ${fromError(itemResult.error)}`)
+                }
             }
         }
     }

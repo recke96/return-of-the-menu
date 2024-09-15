@@ -9,7 +9,8 @@ export const htmlToText = (arg: string, _: RefinementCtx): string => sanitize(ar
 const retryPolicy = retry(handleAll, {maxAttempts: 3, backoff: new ExponentialBackoff({initialDelay: 256})})
 export const createPolicy = (logger: AstroIntegrationLogger) => wrap(
     fallback(handleAll, () => {
-        logger.error("Failed to many times, aborting europlaza menu");
+        logger.error("Failed to many times, aborting");
+        return [];
     }),
     retryPolicy,
 )
