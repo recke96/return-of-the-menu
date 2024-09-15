@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import { type GetStaticPaths } from "astro";
 import Base from "../../layouts/Base.astro";
 import Table from "../../components/Menu/Table.astro";
+import { matchCollectionRef } from "../../utils";
 
 interface Props {
   restaurant: CollectionEntry<"restaurants">;
@@ -20,9 +21,8 @@ export const getStaticPaths = (async () => {
 const { restaurant } = Astro.props;
 
 const now = new Date();
-const menu = await getCollection(
-  "menu",
-  (mi) => mi.data.restaurant === restaurant.id,
+const menu = await getCollection("menu", ({ data }) =>
+  matchCollectionRef(data.restaurant, restaurant.id),
 );
 ---
 

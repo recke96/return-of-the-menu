@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import Table from "./Menu/Table.astro";
+import { matchCollectionRef } from "../utils";
 
 interface Props {
   readonly restaurant: CollectionEntry<"restaurants">;
@@ -9,9 +10,9 @@ interface Props {
 
 const { restaurant } = Astro.props;
 const link = `/restaurants/${restaurant.id}`;
-const menu = await getCollection(
-  "menu",
-  ({ data }) => data.restaurant === restaurant.id,
+
+const menu = await getCollection("menu", ({ data }) =>
+  matchCollectionRef(data.restaurant, restaurant.id),
 );
 ---
 
