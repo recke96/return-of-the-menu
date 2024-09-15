@@ -19,9 +19,12 @@
     "cockatiel": "^3.2.1",
     "date-fns": "3.6.0",
     "dotenv": "16.4.5",
-    "prettier": "3.3.3",
     "slugify": "^1.6.6",
     "typescript": "^5.5.4",
     "zod-validation-error": "^3.3.1"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.1"
   }
 }
