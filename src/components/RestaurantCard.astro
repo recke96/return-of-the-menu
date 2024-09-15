@@ -8,12 +8,13 @@ interface Props {
 }
 
 const {restaurant} = Astro.props;
+const link = `/restaurants/${restaurant.id}`
 const menu = await getCollection("menu", ({data}) => data.restaurant === restaurant.id);
 ---
 
 <div class="card restaurant">
     <header>
-        <a href="/">
+        <a href={link}>
             <h2>{restaurant.data.name}</h2>
         </a>
     </header>
