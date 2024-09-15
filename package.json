@@ -24,10 +24,10 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.3",
-    "@astrojs/ts-plugin": "^1.10.1",
+    "@astrojs/ts-plugin": "^1.10.2",
     "@types/node": "^22.5.2",
     "@types/sanitize-html": "^2.13.0",
-    "astro": "^4.15.1",
+    "astro": "^4.15.6",
     "cheerio": "^1.0.0",
     "cockatiel": "^3.2.1",
     "typescript": "^5.5.4",
