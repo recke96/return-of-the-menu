@@ -1,8 +1,8 @@
 import {z} from "astro:content";
 import {createPolicy, htmlToText} from "./util.mjs";
-import type {Loader, LoaderContext} from "astro/loaders";
-import {MenuItemSchema} from "./schema.mjs";
+import {type MenuItem, MenuItemSchema} from "./schema.mjs";
 import {fromError} from "zod-validation-error";
+import type {AstroIntegrationLogger} from "astro";
 
 const SaiCategory = z.object({
     id: z.coerce.string(),
@@ -43,85 +43,82 @@ const SaiFood = z.object({
     updated_at: z.string().datetime(),
 });
 
-export interface SaiCookartLoaderOptions {
+type SaiCookartLoaderRequiredConfig = {
+    readonly logger: AstroIntegrationLogger;
+};
+
+type SaiCookartLoaderOptionalConfig = {
     readonly apiEndpoint: string;
-}
+};
+
+export type SaiCookartLoaderConfig = SaiCookartLoaderRequiredConfig & Partial<SaiCookartLoaderOptionalConfig>;
 
 export const DefaultSaiCookartLoaderOptions = {
     apiEndpoint: "https://api.sai-cookart.at/foods"
-} as SaiCookartLoaderOptions;
+} as SaiCookartLoaderOptionalConfig;
 
-export function saiCookartLoader(options?: Partial<SaiCookartLoaderOptions>): Loader {
-    const realizedOptions = Object.assign({}, DefaultSaiCookartLoaderOptions, options);
-    return {
-        name: "saicookart-loader",
-        schema: MenuItemSchema,
-        load: async (loaderCtx) => {
-            const policy = createPolicy(loaderCtx.logger);
-            await policy.execute(async ({attempt, signal}) => {
-                if (attempt > 1) {
-                    loaderCtx.logger.warn(`Attempt ${attempt}`);
-                }
-
-                await fetchRestaurantData(realizedOptions.apiEndpoint, loaderCtx, signal);
-            })
+export async function loadSaiCookartMenu(options: SaiCookartLoaderConfig): Promise<ReadonlyArray<MenuItem>> {
+    const {apiEndpoint, logger} = Object.assign({}, DefaultSaiCookartLoaderOptions, options);
+    const policy = createPolicy(logger);
+    return await policy.execute(async ({attempt, signal}) => {
+        if (attempt > 1) {
+            logger.warn(`Attempt ${attempt}`);
         }
-    }
+
+        const menuGenerator = fetchRestaurantData(apiEndpoint, logger, signal);
+        return Array.fromAsync(menuGenerator);
+    })
 }
 
-async function fetchRestaurantData(apiEndpoint: string, ctx: LoaderContext, signal?: AbortSignal) {
+async function* fetchRestaurantData(apiEndpoint: string, logger: AstroIntegrationLogger, signal: AbortSignal): AsyncGenerator<MenuItem> {
     const params = new URLSearchParams({
         "active": "true",
-        "category": "2"
+        "category": "2", // menu
     });
 
     const response = await fetch(`${apiEndpoint}?${params}`, {
-        signal: signal ?? null
+        signal: signal
     });
 
     const data = await response.json();
 
-    ctx.logger.debug(`fetchRestaurantData - Result ${response.status} ${response.statusText}:\n${JSON.stringify(data)}`);
+    logger.debug(`fetchRestaurantData - Result ${response.status} ${response.statusText}:\n${JSON.stringify(data)}`);
 
     if (!response.ok) {
-        ctx.logger.error(`fetchRestaurantData - Unexpected result: ${response.status} ${response.statusText}`);
+        logger.error(`Unexpected result: ${response.status} ${response.statusText}`);
         throw new Error();
     }
 
     const foodsResult = await z.array(SaiFood).safeParseAsync(data);
     if (!foodsResult.success) {
-        ctx.logger.error(fromError(foodsResult.error).toString());
+        logger.error(fromError(foodsResult.error).toString());
         throw new Error();
     }
 
     for (const food of foodsResult.data) {
-        const entryId = `sai/${food.id}`;
-        const data = await ctx.parseData({
-            id: entryId,
-            data: {
-                restaurant: "sai-cookart",
-                name: food.name,
-                description: food.description,
-                price: food.options.length > 0
-                    ? null
-                    : {amount: food.price, currency: "EUR"},
-                options: food.options.length <= 0
-                    ? []
-                    : food.options.map(opt => ({
-                        name: opt.name,
-                        description: opt.description,
-                        price: {
-                            amount: opt.pricePickup,
-                            currency: "EUR",
-                        }
-                    })),
-            }
+        const itemResult = await MenuItemSchema.safeParseAsync({
+            restaurant: "sai-cookart",
+            name: food.name,
+            description: food.description,
+            price: food.options.length > 0
+                ? null
+                : {amount: food.price, currency: "EUR"},
+            options: food.options.length <= 0
+                ? []
+                : food.options.map(opt => ({
+                    name: opt.name,
+                    description: opt.description,
+                    price: {
+                        amount: opt.pricePickup,
+                        currency: "EUR",
+                    }
+                })),
         });
 
-        ctx.store.set({
-            id: entryId,
-            data: data,
-            digest: ctx.generateDigest(data),
-        })
+        if (itemResult.success) {
+            yield itemResult.data;
+        } else {
+            logger.warn(`Could not parse data: ${fromError(itemResult.error)}`)
+        }
     }
 }

@@ -1,6 +1,5 @@
 import {z, defineCollection} from "astro:content";
-// import {europlazaLoader} from "./menu/europlaza.mjs";
-// import {EUROPLAZA_PASSWORD, EUROPLAZA_USER} from "astro:env/server";
+import {menuLoader} from "./menu/menu-loader.ts";
 
 const restaurants = defineCollection({
     type: "data",
@@ -17,6 +16,9 @@ const restaurants = defineCollection({
         ])
     })
 })
-const menu = defineCollection({});
+const menu = defineCollection({
+    type: "content_layer",
+    loader: menuLoader()
+});
 
 export const collections = {restaurants, menu}
