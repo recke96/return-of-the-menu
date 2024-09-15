@@ -1,34 +1,37 @@
 ---
-import type {CollectionEntry} from 'astro:content';
-import {getCollection} from 'astro:content';
-import {type GetStaticPaths} from "astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import { type GetStaticPaths } from "astro";
 import Base from "../../layouts/Base.astro";
 import Table from "../../components/Menu/Table.astro";
 
 interface Props {
-    restaurant: CollectionEntry<"restaurants">;
+  restaurant: CollectionEntry<"restaurants">;
 }
 
 export const getStaticPaths = (async () => {
-    const restaurants = await getCollection("restaurants");
-    return restaurants.map(entry => ({
-        params: {slug: entry.id},
-        props: {restaurant: entry}
-    }));
+  const restaurants = await getCollection("restaurants");
+  return restaurants.map((entry) => ({
+    params: { slug: entry.id },
+    props: { restaurant: entry },
+  }));
 }) satisfies GetStaticPaths;
 
-const {restaurant} = Astro.props;
+const { restaurant } = Astro.props;
 
 const now = new Date();
-const menu = await getCollection("menu", (mi) => mi.data.restaurant === restaurant.id)
+const menu = await getCollection(
+  "menu",
+  (mi) => mi.data.restaurant === restaurant.id,
+);
 ---
 
 <Base date={now} title={restaurant.data.name}>
-    <h2>
-        {restaurant.data.name}
-        <br/>
-        {restaurant.data.homepage && <small>{restaurant.data.homepage}</small>}
-    </h2>
+  <h2>
+    {restaurant.data.name}
+    <br />
+    {restaurant.data.homepage && <small>{restaurant.data.homepage}</small>}
+  </h2>
 
-    <Table items={menu}/>
+  <Table items={menu} />
 </Base>

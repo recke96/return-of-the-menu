@@ -6,8 +6,5 @@
     "city": "1120 Wien"
   },
   "homepage": "https://sai-cookart.at",
-  "latLng": [
-    48.171837,
-    16.33204
-  ]
+  "latLng": [48.171837, 16.33204]
 }

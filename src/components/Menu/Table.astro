@@ -1,26 +1,24 @@
 ---
-import type {CollectionEntry} from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import Item from "./Item.astro";
 
 interface Props {
-    items: Array<CollectionEntry<"menu">>
+  items: Array<CollectionEntry<"menu">>;
 }
 
-const {items} = Astro.props;
+const { items } = Astro.props;
 ---
 
 <table class="striped" style="empty-cells: hide;">
-    <thead>
+  <thead>
     <tr>
-        <th><!-- indent --></th>
-        <th>Menü</th>
-        <th>Beschreibung</th>
-        <th>Preis</th>
+      <th><!-- indent --></th>
+      <th>Menü</th>
+      <th>Beschreibung</th>
+      <th>Preis</th>
     </tr>
-    </thead>
-    <tbody>
-    {items.map((item) => (
-            <Item item={item}/>
-    ))}
-    </tbody>
+  </thead>
+  <tbody>
+    {items.map((item) => <Item item={item} />)}
+  </tbody>
 </table>

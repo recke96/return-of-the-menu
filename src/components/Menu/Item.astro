@@ -1,35 +1,42 @@
 ---
-import type {CollectionEntry} from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import Money from "../Money.astro";
 
 interface Props {
-    readonly item: CollectionEntry<"menu">;
+  readonly item: CollectionEntry<"menu">;
 }
 
-const {item} = Astro.props;
+const { item } = Astro.props;
 ---
+
 <tr>
-    <td colspan="2">{item.data.name}</td>
-    {
-        item.data.options.length > 0
-            ?
-                <td colspan="2">{item.data.description}</td>
-            :
-                <Fragment>
-                    <td>{item.data.description}</td>
-                    <td>
-                        <Money amount={item.data.price!.amount} currency={item.data.price!.currency}/>
-                    </td>
-                </Fragment>
-    }
+  <td colspan="2">{item.data.name}</td>
+  {
+    item.data.options.length > 0 ? (
+      <td colspan="2">{item.data.description}</td>
+    ) : (
+      <Fragment>
+        <td>{item.data.description}</td>
+        <td>
+          <Money
+            amount={item.data.price!.amount}
+            currency={item.data.price!.currency}
+          />
+        </td>
+      </Fragment>
+    )
+  }
 </tr>
 {
-    item.data.options.map(opt =>
+  item.data.options.map((opt) => (
     <tr>
-        <td></td>
-        <td colspan="2">{opt.name} {opt.description}</td>
-        <td>
-            <Money amount={opt.price.amount} currency={opt.price.currency}/>
-        </td>
-    </tr>)
-    }
+      <td />
+      <td colspan="2">
+        {opt.name} {opt.description}
+      </td>
+      <td>
+        <Money amount={opt.price.amount} currency={opt.price.currency} />
+      </td>
+    </tr>
+  ))
+}

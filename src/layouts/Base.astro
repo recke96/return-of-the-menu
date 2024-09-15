@@ -1,42 +1,45 @@
 ---
 import "chota";
-import "@styles/menu.css"
-import {formatDate} from "date-fns"
+import "@styles/menu.css";
+import { formatDate } from "date-fns";
 import ThemeSwitcher from "@components/ThemeSwitcher.astro";
 
 interface Props {
-    title: string;
-    date: Date;
+  title: string;
+  date: Date;
 }
 
-const {title, date} = Astro.props;
-const formattedDate = formatDate(date, "dd.MM.yyyy")
+const { title, date } = Astro.props;
+const formattedDate = formatDate(date, "dd.MM.yyyy");
 ---
+
 <html lang="de">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="generator" content={Astro.generator}/>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
 
     <title>{formattedDate} | {title}</title>
-</head>
-<body>
-<div class="wrapper">
-    <header class="bg-primary">
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="bg-primary">
         <div class="nav-center">
-            <a href="/public"><h1 class="text-light">{formattedDate} | Rückkehr des Menüs</h1></a>
+          <a href="/public"
+            ><h1 class="text-light">{formattedDate} | Rückkehr des Menüs</h1></a
+          >
         </div>
-    </header>
+      </header>
 
-    <main class="container">
-        <slot/>
-    </main>
+      <main class="container">
+        <slot />
+      </main>
 
-    <footer class="row">
+      <footer class="row">
         <div class="col" style="padding: 10px;">
-            <ThemeSwitcher/>
+          <ThemeSwitcher />
         </div>
-    </footer>
-</div>
-</body>
+      </footer>
+    </div>
+  </body>
 </html>
