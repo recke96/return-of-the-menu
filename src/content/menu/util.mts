@@ -10,7 +10,8 @@ import {
 } from "cockatiel";
 
 export const sanitize = (val: string) =>
-  cheerio.load(val, { xml: { xmlMode: false } }).text();
+  cheerio.load(val, { xml: { xmlMode: false } }, false).text();
+
 export const htmlToText = (arg: string, _: RefinementCtx): string =>
   sanitize(arg);
 
