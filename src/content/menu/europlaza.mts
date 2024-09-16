@@ -255,6 +255,7 @@ async function* fetchRestaurantData(
             amount: item.price / 100,
             currency: item.currency,
           },
+          options: [],
         });
 
         if (itemResult.success) {
