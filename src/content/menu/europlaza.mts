@@ -106,7 +106,7 @@ async function fetchAccessToken(
   const cachedTokenStr = meta.get(cacheKey);
   const cachedToken = await CachedTokenSchema.parseAsync(cachedTokenStr);
 
-  if (cachedToken && cachedToken.expiresAt < now) {
+  if (cachedToken && cachedToken.expiresAt > now) {
     logger.info(`Cache-Hit:\n${JSON.stringify(cachedToken)}`);
     return cachedToken.token;
   }
