@@ -1,5 +1,5 @@
 import type { RefinementCtx } from "zod";
-import * as cheerio from "cheerio";
+import * as cheerio from "cheerio/slim";
 import type { AstroIntegrationLogger } from "astro";
 import {
   ExponentialBackoff,
@@ -9,8 +9,10 @@ import {
   wrap,
 } from "cockatiel";
 
-export const sanitize = (val: string) =>
-  cheerio.load(val, { xml: { xmlMode: false } }, false).text();
+export const sanitize = (val: string) => {
+  const fragment = cheerio.load(val);
+  return fragment().prop("innerText") ?? "";
+};
 
 export const htmlToText = (arg: string, _: RefinementCtx): string =>
   sanitize(arg);
