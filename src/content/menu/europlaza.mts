@@ -34,7 +34,7 @@ export const DefaultEuroplazaLoaderOptions = {
 
 export async function loadEuroplazaMenu(
   options: EuroplazaConfig,
-): Promise<Array<MenuItem>> {
+): Promise<ReadonlyArray<MenuItem>> {
   const { logger, meta, apiEndpoint, tokenEndpoint, user, password } =
     Object.assign({}, DefaultEuroplazaLoaderOptions, options);
 
