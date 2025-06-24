@@ -24,10 +24,16 @@ const formattedDate = formatDate(date, "dd.MM.yyyy");
   <body>
     <div class="wrapper">
       <header class="bg-primary">
-        <div class="nav-center">
-          <a href="/"
-            ><h1 class="text-light">{formattedDate} | Rückkehr des Menüs</h1></a
-          >
+        <div class="nav">
+          <div class="nav-left" />
+          <div class="nav-center">
+            <a href="/"
+              ><h1 class="text-light">{formattedDate} | Rückkehr des Menüs</h1></a
+            >
+          </div>
+          <div class="nav-right">
+            <ThemeSwitcher />
+          </div>
         </div>
       </header>
 
@@ -37,7 +43,6 @@ const formattedDate = formatDate(date, "dd.MM.yyyy");
 
       <footer class="row">
         <div class="col" style="padding: 10px;">
-          <ThemeSwitcher />
         </div>
       </footer>
     </div>

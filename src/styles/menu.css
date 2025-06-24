@@ -13,10 +13,6 @@
   font-size: 0.75em;
 }
 
-#themeswitcher,
-#themeswitcher > summary {
-  width: 120px;
-}
 
 body.dark {
   --bg-color: #1c1c1c;
@@ -38,6 +34,14 @@ body.dracula {
   --color-success: #50fa7b;
   --font-family-sans: sans-serif;
   --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
+}
+
+header .nav {
+  align-items: center;
+}
+
+#themeswitcher {
+  padding-right: 1rem;
 }
 
 .card.restaurant {
