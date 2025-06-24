@@ -1,6 +1,6 @@
 import { z } from "astro:content";
-import { createPolicy, htmlToText } from "./util.mts";
-import { type MenuItem, MenuItemSchema } from "./schema.mts";
+import { createPolicy, htmlToText } from "./util.ts";
+import { type MenuItem, MenuItemSchema } from "./schema.ts";
 import { fromError } from "zod-validation-error";
 import type { AstroIntegrationLogger } from "astro";
 

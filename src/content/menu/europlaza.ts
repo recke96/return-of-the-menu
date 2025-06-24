@@ -6,9 +6,9 @@ import {
   type MenuItem,
   MenuItemSchema,
   MoneySchema,
-} from "./schema.mts";
+} from "./schema.ts";
 import { fromError } from "zod-validation-error";
-import { createPolicy, htmlToText } from "./util.mts";
+import { createPolicy, htmlToText } from "./util.ts";
 import type { AstroIntegrationLogger } from "astro";
 
 type EuroplazaRequiredConfig = {

@@ -1,7 +1,7 @@
 import type { Loader } from "astro/loaders";
-import { MenuItemSchema } from "./schema.mts";
-import { loadEuroplazaMenu } from "./europlaza.mts";
-import { loadSaiCookartMenu } from "./sai-cookart.mts";
+import { MenuItemSchema } from "./schema.ts";
+import { loadEuroplazaMenu } from "./europlaza.ts";
+import { loadSaiCookartMenu } from "./sai-cookart.ts";
 
 export function menuLoader(): Loader {
   return {
