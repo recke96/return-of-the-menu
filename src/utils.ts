@@ -14,7 +14,7 @@ export const matchCollectionRef = (
   }
 
   if ("slug" in ref) {
-    return ref.slug === "id";
+    return ref.slug === id;
   }
 
   return false;
