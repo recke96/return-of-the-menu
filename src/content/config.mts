@@ -17,7 +17,6 @@ const restaurants = defineCollection({
   }),
 });
 const menu = defineCollection({
-  type: "content_layer",
   loader: menuLoader(),
 });
 

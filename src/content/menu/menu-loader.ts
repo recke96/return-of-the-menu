@@ -1,8 +1,7 @@
 import type { Loader } from "astro/loaders";
-import { MenuItemSchema } from "./schema.mjs";
-import { loadEuroplazaMenu } from "./europlaza.mjs";
-import { EUROPLAZA_PASSWORD, EUROPLAZA_USER } from "astro:env/server";
-import { loadSaiCookartMenu } from "./sai-cookart.mjs";
+import { MenuItemSchema } from "./schema.mts";
+import { loadEuroplazaMenu } from "./europlaza.mts";
+import { loadSaiCookartMenu } from "./sai-cookart.mts";
 
 export function menuLoader(): Loader {
   return {
@@ -11,8 +10,8 @@ export function menuLoader(): Loader {
     load: async (ctx) => {
       const loading = await Promise.all([
         loadEuroplazaMenu({
-          user: EUROPLAZA_USER,
-          password: EUROPLAZA_PASSWORD,
+          user: import.meta.env.EUROPLAZA_USER,
+          password: import.meta.env.EUROPLAZA_PASSWORD,
           logger: ctx.logger.fork("europlaza-loader"),
           meta: ctx.meta,
         }),

@@ -2,7 +2,7 @@
   "name": "return-of-the-menu",
   "private": true,
   "version": "0.0.0",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "dev": "astro dev --host",
     "start": "astro dev --host",
@@ -10,10 +10,10 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/ts-plugin": "^1.10.3",
+    "@astrojs/ts-plugin": "^1.10.4",
     "@types/node": "^22.5.2",
     "@types/sanitize-html": "^2.13.0",
-    "astro": "^4.16.7",
+    "astro": "^5.10.1",
     "cheerio": "^1.0.0",
     "chota": "0.9.2",
     "cockatiel": "^3.2.1",

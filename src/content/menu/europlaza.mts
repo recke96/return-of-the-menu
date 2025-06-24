@@ -6,7 +6,7 @@ import {
   type MenuItem,
   MenuItemSchema,
   MoneySchema,
-} from "./schema.mjs";
+} from "./schema.mts";
 import { fromError } from "zod-validation-error";
 import { createPolicy, htmlToText } from "./util.mts";
 import type { AstroIntegrationLogger } from "astro";
