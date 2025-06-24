@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../.astro/collections/restaurants.schema.json",
+  "name": "Plaza Eurest",
+  "address": {
+    "street": "Am Europlatz 2",
+    "city": "1120 Wien"
+  },
+  "homepage": "https://www.europlaza.at/de/plaza-life/restaurant-plaza-eurest/",
+  "latLng": [48.171102931364416, 16.33321460566478]
+}

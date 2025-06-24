@@ -1,6 +1,3 @@
 {
-  "recommendations": [
-    "ginfuru.better-nunjucks",
-    "esbenp.prettier-vscode"
-  ]
+  "recommendations": ["ginfuru.better-nunjucks", "esbenp.prettier-vscode"]
 }

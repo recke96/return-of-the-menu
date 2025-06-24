@@ -1,0 +1,78 @@
+<details id="themeswitcher" class="dropdown">
+  <summary id="theme-select-selected" class="button outline text-light">
+    Theme:
+  </summary>
+  <div class="card">
+    <p>
+      <button class="button clear" data-theme="system">System</button>
+    </p>
+    <p>
+      <button class="button clear" data-theme="light">Hell</button>
+    </p>
+    <p>
+      <button class="button clear" data-theme="dark">Dunkel</button>
+    </p>
+    <p>
+      <button class="button clear" data-theme="dracula">Dracula</button>
+    </p>
+  </div>
+</details>
+
+<script>
+  const savedTheme = localStorage.getItem("theme") ?? "system";
+  const pref = window.matchMedia("(prefers-color-scheme: dark)");
+  const onPrefChange = (evt: MediaQueryListEvent) => {
+    if (evt.matches) {
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
+    }
+  };
+
+  const handleThemeChange = (
+    selectedTheme: string,
+    themeName: string,
+    displayName: string,
+  ) => {
+    if (selectedTheme === themeName) {
+      document.getElementById("theme-select-selected")!.innerText =
+        `Theme: ${displayName}`;
+      document.body.classList.add(themeName);
+    } else {
+      document.body.classList.remove(themeName);
+    }
+  };
+
+  const changeTheme = (selectedTheme: string) => {
+    localStorage.setItem("theme", selectedTheme);
+
+    handleThemeChange(selectedTheme, "light", "Hell");
+    handleThemeChange(selectedTheme, "dark", "Dunkel");
+    handleThemeChange(selectedTheme, "dracula", "Dracula");
+
+    if (selectedTheme === "system") {
+      document.getElementById("theme-select-selected")!.innerText =
+        "Theme: System";
+      pref.addEventListener("change", onPrefChange);
+      if (pref.matches) {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.add("light");
+      }
+    } else {
+      pref.removeEventListener("change", onPrefChange);
+    }
+  };
+
+  const themeBtns = document.querySelectorAll("button[data-theme]");
+  themeBtns.forEach((btn) =>
+    btn.addEventListener("click", (evt) => {
+      if (evt.target instanceof HTMLElement)
+        changeTheme(evt.target.dataset["theme"] ?? "system");
+    }),
+  );
+
+  changeTheme(savedTheme);
+</script>

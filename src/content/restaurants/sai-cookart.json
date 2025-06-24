@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../.astro/collections/restaurants.schema.json",
+  "name": "Sai CookArt",
+  "address": {
+    "street": "Wienerbergstraße 26",
+    "city": "1120 Wien"
+  },
+  "homepage": "https://sai-cookart.at",
+  "latLng": [48.171837, 16.33204]
+}

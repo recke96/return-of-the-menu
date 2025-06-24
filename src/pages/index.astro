@@ -1,0 +1,18 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import RestaurantCard from "../components/RestaurantCard.astro";
+
+const now = new Date();
+const restaurants = await getCollection("restaurants");
+---
+
+<Base date={now} title="Rückkehr des Menüs">
+  <div class="row">
+    {restaurants.map((r) => (
+      <div class="col-12 col-6-lg">
+        <RestaurantCard restaurant={r} />
+      </div>
+    ))}
+  </div>
+</Base>

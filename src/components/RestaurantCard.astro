@@ -1,0 +1,26 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import Table from "./Menu/Table.astro";
+import { matchCollectionRef } from "../utils";
+
+interface Props {
+  readonly restaurant: CollectionEntry<"restaurants">;
+}
+
+const { restaurant } = Astro.props;
+const link = `/restaurants/${restaurant.id}`;
+
+const menu = await getCollection("menu", ({ data }) =>
+  matchCollectionRef(data.restaurant, restaurant.id),
+);
+---
+
+<div class="card restaurant">
+  <header>
+    <a href={link}>
+      <h2>{restaurant.data.name}</h2>
+    </a>
+  </header>
+  <Table items={menu} />
+</div>
