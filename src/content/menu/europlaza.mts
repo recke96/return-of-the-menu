@@ -1,5 +1,5 @@
 import { type MetaStore, z } from "astro:content";
-import { addMinutes, endOfDay, startOfDay } from "date-fns";
+import { addMinutes, endOfDay, startOfDay, formatISO } from "date-fns";
 import slugify from "slugify";
 import {
   KnownRestaurantsSchema,
@@ -200,8 +200,8 @@ async function* fetchRestaurantData(
     variables: {
       limit: 50,
       offset: 0,
-      from: start,
-      to: end,
+      from: formatISO(start),
+      to: formatISO(end),
     },
   };
 
