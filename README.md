@@ -4,7 +4,7 @@ Since the [Europlaza Website](https://www.europlaza.at/en/restaurants/) does not
 
 ## Tech
 
-Build with [11ty](https://www.11ty.dev/), which downloads the menus for the day during the build-process to generate a static site styled with [Chota](https://jenil.github.io/chota/).
+Build with [astro](https://astro.build/), which downloads the menus for the day during the build-process to generate a static site styled with [Chota](https://jenil.github.io/chota/).
 
 ## Credits
 
