@@ -23,7 +23,7 @@
     "dotenv": "16.5.0",
     "slugify": "1.6.6",
     "typescript": "5.5.4",
-    "zod-validation-error": "3.3.1"
+    "zod-validation-error": "3.5.2"
   },
   "devDependencies": {
     "prettier": "3.3.3",
