@@ -22,7 +22,7 @@
     "date-fns": "4.1.0",
     "dotenv": "17.2.1",
     "slugify": "1.6.6",
-    "typescript": "5.8.3",
+    "typescript": "5.9.2",
     "zod-validation-error": "4.0.1"
   },
   "devDependencies": {
