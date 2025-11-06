@@ -15,7 +15,7 @@
     "@astrojs/check": "0.9.5",
     "@astrojs/ts-plugin": "1.10.5",
     "@types/node": "24.10.0",
-    "astro": "5.15.3",
+    "astro": "5.15.4",
     "cheerio": "1.1.2",
     "chota": "0.9.2",
     "cockatiel": "3.2.1",
