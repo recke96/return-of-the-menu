@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> return-of-the-menu was archived after the API used was discontinued
+
 # Return of the Menu
 
 Since the [Europlaza Website](https://www.europlaza.at/en/restaurants/) does not publish the menu plans anymore (and only annoyingly links to an ad to install their app) we decided to host our own menu plan.
